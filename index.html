@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>InterventionPro Ultra</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root {
   --bg: #05070a; --card: #12161f; --accent: #ff6b2b; --accent-glow: rgba(255,107,43,0.3);
@@ -15,7 +14,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
 
-/* UI ELEMENTS */
 .hdr { position: sticky; top: 0; z-index: 100; background: rgba(5,7,10,0.8); backdrop-filter: blur(15px); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
 .logo span { color: var(--accent); }
@@ -27,320 +25,429 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 .btn { border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
 .btn-primary { background: linear-gradient(135deg, var(--accent), #ff9060); color: white; padding: 14px 24px; box-shadow: 0 8px 20px var(--accent-glow); }
 .btn-secondary { background: var(--card); border: 1px solid var(--border); color: white; padding: 12px 20px; }
+.btn-green { background: rgba(0,255,136,0.15); color: var(--success); border: 1px solid rgba(0,255,136,0.3); padding: 12px 20px; }
 .btn-danger { background: rgba(255, 60, 60, 0.15); color: #ff5050; padding: 12px; }
 .btn:active { transform: scale(0.96); opacity: 0.8; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
 .stat-card { background: var(--card); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
 .stat-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono'; }
 .stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 
-.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; }
-.card-icon { width: 45px; height: 45px; background: rgba(255,107,43,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 800; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+.card:active { transform: scale(0.98); }
+.card-icon { width: 45px; height: 45px; background: rgba(255,107,43,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 800; font-size: 1rem; }
+
+.folder-banner { border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+.folder-banner.linked { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.25); color: var(--success); }
+.folder-banner.unlinked { background: rgba(255,107,43,0.1); border: 1px solid rgba(255,107,43,0.25); color: var(--accent); }
+.folder-banner-icon { font-size: 1.4rem; flex-shrink: 0; }
+.folder-banner-info { flex: 1; }
+.folder-banner-title { font-weight: 700; }
+.folder-banner-sub { font-size: 0.75rem; opacity: 0.75; margin-top: 2px; }
 
 .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.photo-item { aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
+.photo-item { aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--card); border: 1px solid var(--border); cursor: pointer; }
 .photo-item img { width: 100%; height: 100%; object-fit: cover; }
 
-/* MODALS */
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; padding: 20px; align-items: center; justify-content: center; }
-.modal { background: var(--card); width: 100%; max-width: 450px; border-radius: 24px; padding: 30px; border: 1px solid var(--border); position: relative; }
-.input-group input { width: 100%; padding: 16px; background: #1a1f2b; border: 1px solid var(--border); border-radius: 12px; color: white; margin: 10px 0 20px; font-size: 1rem; }
+.modal { background: var(--card); width: 100%; max-width: 450px; border-radius: 24px; padding: 30px; border: 1px solid var(--border); }
+.modal h3 { margin-bottom: 20px; font-size: 1.2rem; }
+.modal input { width: 100%; padding: 16px; background: #1a1f2b; border: 1px solid var(--border); border-radius: 12px; color: white; margin-bottom: 14px; font-size: 1rem; font-family: inherit; outline: none; }
+.modal input:focus { border-color: var(--accent); }
 
-/* SCANNER LIVE */
-.scan-container { position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 25px; overflow: hidden; background: #000; border: 2px solid var(--accent); }
-#scan-video { width: 100%; height: 100%; object-fit: cover; }
-.scan-mask { position: absolute; inset: 0; box-shadow: 0 0 0 4000px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
-.scan-target { width: 220px; height: 220px; border: 2px solid var(--accent); border-radius: 20px; position: relative; }
-.scan-line { position: absolute; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scanMove 2s infinite ease-in-out; }
-@keyframes scanMove { 0%, 100% { top: 0% } 50% { top: 100% } }
+.lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
+.lightbox img { max-width: 95vw; max-height: 75vh; border-radius: 15px; object-fit: contain; }
 
-.scan-tools { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; }
-.flash-btn { width: 50px; height: 50px; border-radius: 25px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 1.2rem; }
-.flash-on { background: var(--accent); color: white; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1f2b; color: white; border: 1px solid var(--border); padding: 12px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 9999; white-space: nowrap; max-width: 90vw; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+.toast.show { opacity: 1; }
 
-#scan-res-banner { display: none; background: var(--success); color: #000; padding: 15px; border-radius: 12px; font-weight: 800; margin-top: 15px; text-align: center; font-family: 'JetBrains Mono'; }
+.no-photos { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.no-photos-icon { font-size: 3rem; display: block; margin-bottom: 12px; }
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <div class="logo">🔧 <span>INTER</span>PRO</div>
-  <button class="btn btn-secondary" onclick="exportZipAll()" style="font-size: 0.8rem">TOUT BACKUP</button>
+  <div class="logo">&#128247; <span>INTER</span>PRO</div>
+  <span id="hdr-count" style="font-size:0.8rem;color:var(--muted);">0 intervention</span>
 </div>
 
+<!-- LIST -->
 <div class="view active" id="v-list">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-    <h1 style="font-size: 1.5rem">Interventions</h1>
-    <button class="btn btn-primary" onclick="showModal('m-create')">+ Nouveau</button>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <h1 style="font-size:1.5rem">Interventions</h1>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-green" onclick="openExistingFolder()" style="font-size:0.8rem;padding:10px 14px;">&#128194; Ouvrir</button>
+      <button class="btn btn-primary" onclick="showModal('m-create')">+ Nouveau</button>
+    </div>
   </div>
-  
   <div class="stat-grid">
     <div class="stat-card"><span class="stat-val" id="s-total">0</span><span class="stat-lbl">Dossiers</span></div>
     <div class="stat-card"><span class="stat-val" id="s-photos">0</span><span class="stat-lbl">Photos</span></div>
-    <div class="stat-card"><span class="stat-val" id="s-today">0</span><span class="stat-lbl">Aujourd'hui</span></div>
+    <div class="stat-card"><span class="stat-val" id="s-linked">0</span><span class="stat-lbl">Lies</span></div>
   </div>
-
   <div id="list-container"></div>
 </div>
 
+<!-- DETAIL -->
 <div class="view" id="v-detail">
-  <div style="display:flex; align-items:center; gap:15px; margin-bottom:25px;">
-    <button class="btn btn-secondary" onclick="goHome()" style="padding: 10px;">←</button>
+  <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;">
+    <button class="btn btn-secondary" onclick="goHome()" style="padding:10px 16px;">&#8592;</button>
     <div style="flex:1">
-      <h2 id="d-title" style="font-size: 1.2rem; margin-bottom:2px">---</h2>
-      <p id="d-subtitle" style="color:var(--muted); font-size:0.8rem">---</p>
+      <h2 id="d-title" style="font-size:1.2rem;margin-bottom:2px">---</h2>
+      <p id="d-subtitle" style="color:var(--muted);font-size:0.8rem">---</p>
     </div>
-    <button class="btn btn-danger" onclick="deleteCurrent()">🗑</button>
+    <button class="btn btn-danger" onclick="deleteCurrent()">&#128465;</button>
   </div>
 
-  <div style="display:grid; grid-template-columns: 1fr auto; gap:10px; margin-bottom:25px;">
-    <button class="btn btn-primary" style="width:100%" onclick="capturePhoto()">📸 PRENDRE UNE PHOTO</button>
-    <button class="btn btn-secondary" onclick="exportCurrentZip()">ZIP</button>
+  <div id="folder-banner-container"></div>
+
+  <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:20px;">
+    <button class="btn btn-primary" id="btn-photo" onclick="capturePhoto()">&#128247; Prendre une photo</button>
   </div>
 
-  <div class="photo-grid" id="grid"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <span style="font-size:0.85rem;color:var(--muted);">Photos enregistrees</span>
+    <span id="d-count" style="font-weight:800;font-family:'JetBrains Mono';color:var(--accent);">0</span>
+  </div>
+
+  <div id="grid"></div>
+  <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none"/>
 </div>
 
+<!-- MODAL CREATION -->
 <div class="overlay" id="m-create">
   <div class="modal">
     <h3>Nouvelle Intervention</h3>
-    <div class="input-group">
-      <input type="text" id="in-num" placeholder="N° Intervention (ex: 2026-001)">
-      <input type="text" id="in-client" placeholder="Client / Site">
-    </div>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+    <input type="text" id="in-num" placeholder="N Intervention (ex: 2026-001)" autocomplete="off"/>
+    <input type="text" id="in-client" placeholder="Client / Site" autocomplete="off"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <button class="btn btn-secondary" onclick="hideModals()">ANNULER</button>
-      <button class="btn btn-primary" onclick="addIntervention()">CRÉER</button>
+      <button class="btn btn-primary" onclick="addIntervention()">CREER</button>
     </div>
   </div>
 </div>
 
-<div class="overlay" id="m-scan" style="flex-direction:column;">
-  <div class="scan-container">
-    <video id="scan-video" autoplay muted playsinline></video>
-    <div class="scan-mask">
-      <div class="scan-target"><div class="scan-line"></div></div>
-    </div>
-    <div class="scan-tools">
-      <button class="flash-btn" id="btn-flash" onclick="toggleFlash()">🔦</button>
-    </div>
-  </div>
-  <div id="scan-res-banner"></div>
-  <button class="btn btn-secondary" style="margin-top:20px; width:100%" onclick="stopScanner()">FERMER LE SCANNER</button>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <img id="lb-img" src="" alt=""/>
+  <button class="btn btn-secondary" onclick="hideLightbox()">FERMER</button>
 </div>
 
-<div class="overlay" id="m-light" style="flex-direction:column;">
-  <img id="lb-img" style="max-width:100%; max-height:70vh; border-radius:15px; margin-bottom:20px;">
-  <div style="width:100%; max-width:450px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-    <button class="btn btn-primary" onclick="scanFromImage()">🔍 SCAN PHOTO</button>
-    <button class="btn btn-secondary" onclick="openScanner()">📷 SCAN CAMÉRA</button>
-  </div>
-  <button class="btn btn-danger" style="margin-top:20px" onclick="hideModals()">RETOUR</button>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-let db;
-let interventions = JSON.parse(localStorage.getItem('ipro_data') || '[]');
-let currentId = null;
-let currentStream = null;
-let scanInterval = null;
-let isFlashOn = false;
+// ---- State ----
+var interventions = JSON.parse(localStorage.getItem('ipro_v2') || '[]');
+var currentId = null;
+var folderHandles = {}; // RAM only
+var photoPreviews = {}; // RAM only: id -> [{name, url}]
 
-/* --- INITIALISATION --- */
-const dbReq = indexedDB.open('ipro_db', 1);
-dbReq.onupgradeneeded = e => e.target.result.createObjectStore('photos');
-dbReq.onsuccess = e => { db = e.target.result; renderList(); };
+// ---- Init ----
+renderList();
 
-function renderList() {
-    const cont = document.getElementById('list-container');
-    cont.innerHTML = '';
-    document.getElementById('s-total').textContent = interventions.length;
-    document.getElementById('s-photos').textContent = interventions.reduce((a,b)=>a+b.count, 0);
-    
-    interventions.sort((a,b) => b.id - a.id).forEach(inv => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.onclick = () => openFolder(inv.id);
-        div.innerHTML = `
-            <div class="card-icon">${inv.num.slice(0,2)}</div>
-            <div style="flex:1">
-                <div style="font-weight:700">${inv.num}</div>
-                <div style="color:var(--muted); font-size:0.8rem">${inv.client}</div>
-            </div>
-            <div style="color:var(--accent); font-weight:800; font-family:JetBrains Mono">${inv.count}</div>
-        `;
-        cont.appendChild(div);
-    });
+// ---- Toast ----
+function showToast(msg, duration) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, duration || 2800);
 }
 
-/* --- NAVIGATION --- */
+// ---- Save ----
+function saveData() {
+  localStorage.setItem('ipro_v2', JSON.stringify(interventions.map(function(i) {
+    return { id: i.id, num: i.num, client: i.client, date: i.date, photoCount: i.photoCount, folderName: i.folderName };
+  })));
+}
+
+// ---- Folder name builder ----
+function buildFolderName(num, client) {
+  return (num + '_' + client)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_\- ]/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '');
+}
+
+// ---- Modals ----
 function showModal(id) { document.getElementById(id).style.display = 'flex'; }
-function hideModals() { 
-    document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none');
-    stopScanner();
-}
-function goHome() { document.getElementById('v-detail').classList.remove('active'); document.getElementById('v-list').classList.add('active'); renderList(); }
+function hideModals() { document.querySelectorAll('.overlay').forEach(function(o){ o.style.display = 'none'; }); }
 
-function addIntervention() {
-    const num = document.getElementById('in-num').value.trim();
-    const cli = document.getElementById('in-client').value.trim();
-    if(!num || !cli) return;
-    const inv = { id: Date.now(), num, client: cli, count: 0 };
-    interventions.push(inv);
-    localStorage.setItem('ipro_data', JSON.stringify(interventions));
-    hideModals(); renderList();
-}
+// ---- Lightbox ----
+function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display = 'flex'; }
+function hideLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
-async function openFolder(id) {
-    currentId = id;
-    const inv = interventions.find(x => x.id === id);
-    document.getElementById('d-title').textContent = inv.num;
-    document.getElementById('d-subtitle').textContent = inv.client;
-    document.getElementById('v-list').classList.remove('active');
-    document.getElementById('v-detail').classList.add('active');
-    loadPhotos();
-}
+// ---- Ouvrir un dossier existant ----
+async function openExistingFolder() {
+  if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
+  try {
+    showToast('Choisis le dossier de l'intervention...');
+    // L'utilisateur choisit DIRECTEMENT le sous-dossier (ex: INT-042_Dupont_Jean)
+    var subDir = await window.showDirectoryPicker({ mode: 'readwrite' });
+    var folderName = subDir.name;
 
-/* --- PHOTOS --- */
-function capturePhoto() {
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment';
-    inp.onchange = async () => {
-        const file = inp.files[0];
-        const inv = interventions.find(x => x.id === currentId);
-        const name = `${currentId}_${Date.now()}.jpg`;
-        const tx = db.transaction('photos', 'readwrite');
-        await tx.objectStore('photos').put(file, name);
-        inv.count++;
-        localStorage.setItem('ipro_data', JSON.stringify(interventions));
-        loadPhotos();
-    };
-    inp.click();
-}
+    // Verifier si cette intervention existe deja
+    var existing = interventions.find(function(i){ return i.folderName === folderName; });
 
-async function loadPhotos() {
-    const grid = document.getElementById('grid');
-    grid.innerHTML = '';
-    const tx = db.transaction('photos', 'readonly');
-    const store = tx.objectStore('photos');
-    const req = store.getAllKeys();
-    req.onsuccess = () => {
-        req.result.filter(k => k.startsWith(currentId + '_')).forEach(key => {
-            store.get(key).onsuccess = e => {
-                const url = URL.createObjectURL(e.target.result);
-                const div = document.createElement('div');
-                div.className = 'photo-item';
-                div.onclick = () => { document.getElementById('lb-img').src = url; showModal('m-light'); };
-                div.innerHTML = `<img src="${url}">`;
-                grid.appendChild(div);
-            };
-        });
-    };
-}
-
-/* --- SCANNER MULTI-FORMAT (Barcode + QR) --- */
-async function openScanner() {
-    if (!('BarcodeDetector' in window)) return alert("Scanner non supporté (HTTPS requis)");
-    hideModals();
-    showModal('m-scan');
-    
-    try {
-        currentStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment", focusMode: "continuous" } 
-        });
-        document.getElementById('scan-video').srcObject = currentStream;
-        
-        const detector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'code_39', 'ean_13', 'upc_a'] });
-        
-        scanInterval = setInterval(async () => {
-            const barcodes = await detector.detect(document.getElementById('scan-video'));
-            if (barcodes.length > 0) {
-                successScan(barcodes[0].rawValue);
-            }
-        }, 500);
-    } catch (e) { alert("Erreur caméra : " + e); }
-}
-
-function successScan(code) {
-    if (navigator.vibrate) navigator.vibrate(150);
-    const banner = document.getElementById('scan-res-banner');
-    banner.textContent = "DETECTÉ : " + code;
-    banner.style.display = 'block';
-    navigator.clipboard.writeText(code);
-    
-    setTimeout(() => { banner.style.display = 'none'; }, 3000);
-}
-
-async function toggleFlash() {
-    if(!currentStream) return;
-    const track = currentStream.getVideoTracks()[0];
-    isFlashOn = !isFlashOn;
-    try {
-        await track.applyConstraints({ advanced: [{ torch: isFlashOn }] });
-        document.getElementById('btn-flash').classList.toggle('flash-on', isFlashOn);
-    } catch (e) { alert("Flash non supporté"); }
-}
-
-function stopScanner() {
-    clearInterval(scanInterval);
-    if(currentStream) currentStream.getTracks().forEach(t => t.stop());
-    currentStream = null;
-    isFlashOn = false;
-    document.getElementById('m-scan').style.display = 'none';
-}
-
-async function scanFromImage() {
-    const detector = new BarcodeDetector();
-    try {
-        const codes = await detector.detect(document.getElementById('lb-img'));
-        if (codes.length > 0) {
-            const val = codes[0].rawValue;
-            // Copie automatique
-            await navigator.clipboard.writeText(val);
-            alert("Code trouvé et copié : " + val);
-        } else {
-            alert("Aucun code trouvé sur cette photo");
-        }
-    } catch (e) { alert("Erreur : " + e); }
-}
-
-/* --- EXPORTS --- */
-async function exportCurrentZip() {
-    const zip = new JSZip();
-    const inv = interventions.find(x => x.id === currentId);
-    const tx = db.transaction('photos', 'readonly');
-    const store = tx.objectStore('photos');
-    
-    const keys = (await new Promise(r => {
-        const req = store.getAllKeys();
-        req.onsuccess = () => r(req.result.filter(k => k.startsWith(currentId + '_')));
-    }));
-
-    for(let key of keys) {
-        const blob = await new Promise(r => { store.get(key).onsuccess = e => r(e.target.result); });
-        zip.file(key.split('_')[1], blob);
+    if (existing) {
+      // Deja dans la liste — juste reconnecter
+      folderHandles[existing.id] = subDir;
+      showToast('Dossier retrouve : ' + folderName);
+      openFolder(existing.id);
+      return;
     }
 
-    const content = await zip.generateAsync({type:"blob"});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(content);
-    a.download = `${inv.num}.zip`;
-    a.click();
+    // Nouveau — extraire num et client depuis le nom du dossier
+    // Format attendu : NUM_CLIENT (ex: INT-042_Dupont_Jean)
+    var parts = folderName.split('_');
+    var num = parts[0] || folderName;
+    var client = parts.slice(1).join(' ') || 'Inconnu';
+
+    // Compter les photos existantes dans le dossier
+    var photoCount = 0;
+    try {
+      for await (var entry of subDir.values()) {
+        if (entry.kind === 'file') photoCount++;
+      }
+    } catch(e) {}
+
+    var inv = {
+      id: Date.now(),
+      num: num,
+      client: client,
+      date: new Date().toLocaleDateString('fr-FR'),
+      photoCount: photoCount,
+      folderName: folderName
+    };
+
+    interventions.push(inv);
+    folderHandles[inv.id] = subDir;
+    saveData();
+    renderList();
+    showToast('Dossier ouvert : ' + folderName + ' (' + photoCount + ' photo' + (photoCount > 1 ? 's' : '') + ')');
+    openFolder(inv.id);
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
+  }
 }
 
-function deleteCurrent() {
-    if(!confirm("Supprimer l'intervention et les photos ?")) return;
-    const tx = db.transaction('photos', 'readwrite');
-    const store = tx.objectStore('photos');
-    const req = store.getAllKeys();
-    req.onsuccess = () => {
-        req.result.filter(k => k.startsWith(currentId + '_')).forEach(k => store.delete(k));
-        interventions = interventions.filter(x => x.id !== currentId);
-        localStorage.setItem('ipro_data', JSON.stringify(interventions));
-        goHome();
-    };
+// ---- Render list ----
+function renderList() {
+  var cont = document.getElementById('list-container');
+  var count = interventions.length;
+  var totalPhotos = interventions.reduce(function(a, b){ return a + (b.photoCount || 0); }, 0);
+  var linked = Object.keys(folderHandles).length;
+
+  document.getElementById('hdr-count').textContent = count + ' intervention' + (count > 1 ? 's' : '');
+  document.getElementById('s-total').textContent = count;
+  document.getElementById('s-photos').textContent = totalPhotos;
+  document.getElementById('s-linked').textContent = linked;
+
+  if (!count) {
+    cont.innerHTML = '<div class="no-photos"><span class="no-photos-icon">&#128193;</span><p>Aucune intervention.<br>Cree-en une !</p></div>';
+    return;
+  }
+
+  cont.innerHTML = interventions.slice().reverse().map(function(i) {
+    var isLinked = !!folderHandles[i.id];
+    return '<div class="card" onclick="openFolder(' + i.id + ')">' +
+      '<div class="card-icon">' + esc(i.num).slice(0,3) + '</div>' +
+      '<div style="flex:1">' +
+        '<div style="font-weight:700">' + esc(i.num) + '</div>' +
+        '<div style="color:var(--muted);font-size:0.8rem">' + esc(i.client) + ' &mdash; ' + i.date + '</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px;">' +
+        '<span style="font-family:JetBrains Mono;color:var(--accent);font-weight:800">' + (i.photoCount || 0) + '</span>' +
+        '<span style="font-size:0.7rem;padding:2px 8px;border-radius:20px;' + (isLinked ? 'background:rgba(0,255,136,0.1);color:var(--success)' : 'background:rgba(255,107,43,0.1);color:var(--accent)') + '">' + (isLinked ? 'LIE' : 'NON LIE') + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
+
+// ---- Add intervention ----
+async function addIntervention() {
+  var num = document.getElementById('in-num').value.trim();
+  var cli = document.getElementById('in-client').value.trim();
+  if (!num || !cli) { showToast('Remplis les deux champs !'); return; }
+
+  if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
+
+  try {
+    hideModals();
+    showToast('Choisis le dossier parent...');
+    var parentHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    var folderName = buildFolderName(num, cli);
+    var subDir = await parentHandle.getDirectoryHandle(folderName, { create: true });
+
+    var inv = { id: Date.now(), num: num, client: cli, date: new Date().toLocaleDateString('fr-FR'), photoCount: 0, folderName: folderName };
+    interventions.push(inv);
+    folderHandles[inv.id] = subDir;
+    saveData();
+    renderList();
+    showToast('Dossier cree : ' + folderName);
+    openFolder(inv.id);
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
+  }
+}
+
+// ---- Open folder ----
+function openFolder(id) {
+  currentId = id;
+  var inv = interventions.find(function(x){ return x.id === id; });
+  if (!inv) return;
+  document.getElementById('d-title').textContent = inv.num;
+  document.getElementById('d-subtitle').textContent = inv.client + ' — ' + inv.date + ' — ' + (inv.folderName || '');
+  document.getElementById('v-list').classList.remove('active');
+  document.getElementById('v-detail').classList.add('active');
+  renderFolderBanner(inv);
+  renderGrid(inv);
+}
+
+// ---- Folder banner ----
+function renderFolderBanner(inv) {
+  var el = document.getElementById('folder-banner-container');
+  var btn = document.getElementById('btn-photo');
+  var isLinked = !!folderHandles[inv.id];
+
+  if (isLinked) {
+    el.innerHTML = '<div class="folder-banner linked">' +
+      '<div class="folder-banner-icon">&#128194;</div>' +
+      '<div class="folder-banner-info"><div class="folder-banner-title">' + esc(inv.folderName) + '</div><div class="folder-banner-sub">Dossier lie &mdash; photos enregistrees directement</div></div>' +
+      '</div>';
+    btn.disabled = false;
+  } else {
+    el.innerHTML = '<div class="folder-banner unlinked">' +
+      '<div class="folder-banner-icon">&#128279;</div>' +
+      '<div class="folder-banner-info"><div class="folder-banner-title">Dossier non lie</div><div class="folder-banner-sub">Choisis le dossier parent contenant <strong>' + esc(inv.folderName || inv.num) + '</strong></div></div>' +
+      '<button class="btn btn-green" style="padding:8px 14px;font-size:0.8rem;border-radius:10px;" onclick="reconnectFolder(' + inv.id + ')">Relier</button>' +
+      '</div>';
+    btn.disabled = true;
+  }
+}
+
+// ---- Reconnect ----
+async function reconnectFolder(id) {
+  var inv = interventions.find(function(x){ return x.id === id; });
+  if (!inv) return;
+  try {
+    showToast('Choisis le dossier parent...');
+    var parentHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    var subDir = await parentHandle.getDirectoryHandle(inv.folderName, { create: false });
+    folderHandles[id] = subDir;
+    renderFolderBanner(inv);
+    renderList();
+    showToast('Reconnecte : ' + inv.folderName);
+  } catch(e) {
+    if (e.name === 'NotFoundError') showToast('Dossier "' + inv.folderName + '" introuvable ici');
+    else if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
+  }
+}
+
+// ---- Camera ----
+function capturePhoto() {
+  var inp = document.getElementById('camera-input');
+  inp.value = '';
+  inp.click();
+}
+
+document.getElementById('camera-input').addEventListener('change', async function(e) {
+  var files = Array.from(e.target.files);
+  if (!files.length || !currentId) return;
+
+  var inv = interventions.find(function(x){ return x.id === currentId; });
+  var subDir = folderHandles[currentId];
+  if (!subDir) { showToast('Reconnecte le dossier !'); return; }
+
+  if (!photoPreviews[currentId]) photoPreviews[currentId] = [];
+
+  var saved = 0, errors = 0;
+
+  for (var idx = 0; idx < files.length; idx++) {
+    var file = files[idx];
+    try {
+      var nextNum = (inv.photoCount || 0) + idx + 1;
+      var fileName = inv.folderName + '_' + String(nextNum).padStart(3, '0') + '.jpg';
+
+      // Convert to ArrayBuffer (required for Android Chrome)
+      var arrayBuffer = await fileToArrayBuffer(file);
+
+      var fileHandle = await subDir.getFileHandle(fileName, { create: true });
+      var writable = await fileHandle.createWritable();
+      await writable.write(arrayBuffer);
+      await writable.close();
+
+      // Preview in RAM
+      var url = URL.createObjectURL(file);
+      photoPreviews[currentId].push({ name: fileName, url: url });
+      saved++;
+    } catch(err) {
+      errors++;
+      console.error(err);
+    }
+  }
+
+  inv.photoCount = (inv.photoCount || 0) + saved;
+  saveData();
+  renderGrid(inv);
+  renderList();
+  renderFolderBanner(inv);
+
+  if (saved) showToast(saved + ' photo' + (saved > 1 ? 's' : '') + ' enregistree' + (saved > 1 ? 's' : '') + ' !');
+  if (errors) showToast('Erreur sur ' + errors + ' photo(s) — ' + (errors > 0 ? 'reconnecte le dossier' : ''));
+});
+
+function fileToArrayBuffer(file) {
+  return new Promise(function(resolve, reject) {
+    var r = new FileReader();
+    r.onload = function(e){ resolve(e.target.result); };
+    r.onerror = reject;
+    r.readAsArrayBuffer(file);
+  });
+}
+
+// ---- Grid ----
+function renderGrid(inv) {
+  var grid = document.getElementById('grid');
+  var previews = photoPreviews[inv.id] || [];
+  document.getElementById('d-count').textContent = inv.photoCount || 0;
+
+  if (!previews.length) {
+    grid.innerHTML = inv.photoCount > 0
+      ? '<div class="no-photos"><span class="no-photos-icon">&#128194;</span><p>' + inv.photoCount + ' photo(s) dans le dossier.<br><small style="font-size:0.75rem;color:var(--muted)">Apercus disponibles pendant la session.</small></p></div>'
+      : '<div class="no-photos"><span class="no-photos-icon">&#128247;</span><p>Aucune photo.<br>Appuie sur "Prendre une photo".</p></div>';
+    return;
+  }
+
+  grid.innerHTML = '<div class="photo-grid">' + previews.map(function(p) {
+    return '<div class="photo-item" onclick="openLightbox(\'' + p.url + '\')">' +
+      '<img src="' + p.url + '" alt="' + esc(p.name) + '"/>' +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+// ---- Delete ----
+function deleteCurrent() {
+  if (!confirm('Supprimer cette intervention ? (Les photos sur le telephone ne seront pas supprimees)')) return;
+  interventions = interventions.filter(function(x){ return x.id !== currentId; });
+  delete folderHandles[currentId];
+  delete photoPreviews[currentId];
+  saveData();
+  goHome();
+}
+
+// ---- Home ----
+function goHome() {
+  document.getElementById('v-detail').classList.remove('active');
+  document.getElementById('v-list').classList.add('active');
+  renderList();
+}
+
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
