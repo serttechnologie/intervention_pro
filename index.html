@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>InterventionPro v4</title>
+<title>InterventionPro v5 - Scan</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -13,9 +13,8 @@
   --border:rgba(255,255,255,0.08); --radius:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* UI Elements */
 .hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px);
   padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .logo{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:8px;}
@@ -27,40 +26,28 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:0.15s;
   display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
 .btn:active{transform:scale(0.95);}
-.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:14px 22px;box-shadow:0 6px 20px var(--glow);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:14px 22px;}
 .btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
 .btn-danger{background:var(--red-bg);color:var(--red);padding:10px 14px;}
 
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
-.stat-card{background:var(--card);padding:14px;border-radius:var(--radius);border:1px solid var(--border);text-align:center;}
-.stat-val{display:block;font-size:1.4rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono';}
-.stat-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;}
-
-/* Cards */
 .int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;}
 .card-body{flex:1;min-width:0;}
 .card-num{font-size:0.75rem;font-weight:700;color:var(--accent);}
-.card-name{font-size:0.95rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-/* Grille Photos */
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .photo-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card);position:relative;border:1px solid var(--border);}
 .photo-item img{width:100%;height:100%;object-fit:cover;}
-.photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;
-  width:24px;height:24px;border-radius:50%;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.5);}
+.photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;width:24px;height:24px;border-radius:50%;z-index:10;}
+.barcode-badge{position:absolute;bottom:5px;left:5px;right:5px;background:rgba(0,255,136,0.9);color:#000;
+  font-size:0.6rem;font-weight:800;padding:2px 4px;border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-/* Banner Status */
 .folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;font-size:0.85rem;}
 .linked{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
 .unlinked{background:rgba(255,107,43,0.1);border:1px solid rgba(255,107,43,0.2);color:var(--accent);}
 
-/* Toast & Lightbox */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1f2b;padding:12px 24px;border-radius:30px;opacity:0;transition:0.3s;z-index:9999;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1f2b;padding:12px 24px;border-radius:30px;opacity:0;transition:0.3s;z-index:9999;border:1px solid var(--border);}
 .toast.show{opacity:1;}
-.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;align-items:center;justify-content:center;flex-direction:column;}
-.lightbox img{max-width:95vw;max-height:80vh;border-radius:10px;}
-
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;}
 .modal{background:var(--card);width:100%;max-width:400px;padding:25px;border-radius:20px;border:1px solid var(--border);}
 input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid var(--border);color:#fff;border-radius:10px;}
@@ -73,28 +60,18 @@ input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid 
   <div id="hdr-count" style="font-size:0.8rem;color:var(--muted);">0 dossiers</div>
 </div>
 
-<!-- LISTE -->
 <div class="view active" id="v-list">
   <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
-    <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir dossier</button>
+    <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir</button>
     <button class="btn btn-primary" id="btn-new">+ Nouveau</button>
-  </div>
-  <div class="stat-grid">
-    <div class="stat-card"><span class="stat-val" id="s-total">0</span><span class="stat-lbl">Dossiers</span></div>
-    <div class="stat-card"><span class="stat-val" id="s-photos">0</span><span class="stat-lbl">Photos</span></div>
-    <div class="stat-card"><span class="stat-val" id="s-linked">0</span><span class="stat-lbl">Reliés</span></div>
   </div>
   <div id="list-container"></div>
 </div>
 
-<!-- DETAIL -->
 <div class="view" id="v-detail">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;">
     <button class="btn btn-secondary" id="btn-back">←</button>
-    <div style="flex:1;">
-      <div id="d-num" style="color:var(--accent);font-weight:700;font-size:0.7rem;"></div>
-      <div id="d-title" style="font-weight:800;">---</div>
-    </div>
+    <div style="flex:1;"><div id="d-num" style="color:var(--accent);font-weight:700;font-size:0.7rem;"></div><div id="d-title" style="font-weight:800;"></div></div>
     <button class="btn btn-danger" id="btn-delete">🗑</button>
   </div>
   <div id="folder-banner"></div>
@@ -106,7 +83,6 @@ input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid 
   <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none"/>
 </div>
 
-<!-- MODALS -->
 <div class="overlay" id="m-create">
   <div class="modal">
     <h3>Nouveau dossier</h3>
@@ -119,23 +95,16 @@ input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid 
   </div>
 </div>
 
-<div class="lightbox" id="lightbox">
-  <img id="lb-img" src=""/>
-  <button class="btn btn-secondary" style="margin-top:20px;" onclick="hideLightbox()">Fermer</button>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-let interventions = JSON.parse(localStorage.getItem('ipro_v4') || '[]');
+let interventions = JSON.parse(localStorage.getItem('ipro_v5') || '[]');
 let folderHandles = {}; 
-let photoPreviews = {};
 let currentId = null;
 
-// INIT
 renderList();
 
-// EVENTS
+// Boutons
 document.getElementById('btn-new').onclick = () => showModal('m-create');
 document.getElementById('btn-back').onclick = goHome;
 document.getElementById('btn-modal-create').onclick = createIntervention;
@@ -148,74 +117,24 @@ document.getElementById('btn-delete').onclick = deleteIntervention;
 function showToast(m) {
   const t = document.getElementById('toast');
   t.textContent = m; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function save() {
-  localStorage.setItem('ipro_v4', JSON.stringify(interventions));
-}
-
-// GESTION DOSSIER
-async function verifyPermission(handle) {
-  const opts = { mode: 'readwrite' };
-  if ((await handle.queryPermission(opts)) === 'granted') return true;
-  if ((await handle.requestPermission(opts)) === 'granted') return true;
-  return false;
-}
-
-async function createIntervention() {
-  const num = document.getElementById('in-num').value.trim();
-  const cli = document.getElementById('in-client').value.trim();
-  if(!num || !cli) return;
+// SCANNER DE CODE BARRES
+async function scanBarcode(imageElement) {
+  if (!('BarcodeDetector' in window)) return null;
+  const detector = new BarcodeDetector();
   try {
-    const parent = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const folderName = `${num}_${cli}`.replace(/[^a-z0-9_]/gi, '_');
-    const handle = await parent.getDirectoryHandle(folderName, { create: true });
-    
-    const inv = { id: Date.now(), num, client: cli, folderName, photoCount: 0 };
-    interventions.push(inv);
-    folderHandles[inv.id] = handle;
-    save(); hideModals(); renderList(); openFolder(inv.id);
-  } catch(e) { console.error(e); }
+    const barcodes = await detector.detect(imageElement);
+    return barcodes.length > 0 ? barcodes[0].rawValue : null;
+  } catch (e) { return null; }
 }
 
-async function openExistingFolder() {
-  try {
-    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const folderName = handle.name;
-    let inv = interventions.find(i => i.folderName === folderName);
-    if(!inv) {
-      inv = { id: Date.now(), num: folderName.split('_')[0], client: folderName.split('_')[1] || 'Import', folderName, photoCount: 0 };
-      interventions.push(inv);
-    }
-    folderHandles[inv.id] = handle;
-    save(); renderList(); openFolder(inv.id);
-  } catch(e) {}
-}
-
-async function reconnectFolder(id) {
-  try {
-    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const inv = interventions.find(i => i.id === id);
-    if(handle.name !== inv.folderName) {
-      showToast("Le nom ne correspond pas !"); return;
-    }
-    folderHandles[id] = handle;
-    renderFolderBanner(inv);
-    showToast("Lien rétabli");
-    refreshPhotoCount(id);
-  } catch(e) {}
-}
-
-// GESTION PHOTOS
 async function handlePhoto(e) {
   const file = e.target.files[0];
   if(!file || !currentId) return;
-  
   const handle = folderHandles[currentId];
-  if(!handle || !await verifyPermission(handle)) {
-    showToast("Dossier non relié !"); return;
-  }
+  if(!handle) { showToast("Dossier non relié !"); return; }
 
   const inv = interventions.find(i => i.id === currentId);
   const fileName = `IMG_${Date.now()}.jpg`;
@@ -227,23 +146,10 @@ async function handlePhoto(e) {
     await writable.close();
     
     inv.photoCount++;
-    save();
-    await loadPhotos(currentId); 
-    showToast("Photo enregistrée");
-  } catch(err) { showToast("Erreur d'écriture"); }
-}
-
-async function deletePhoto(fileName) {
-  if(!confirm("Supprimer cette photo ?")) return;
-  const handle = folderHandles[currentId];
-  try {
-    await handle.removeEntry(fileName);
-    const inv = interventions.find(i => i.id === currentId);
-    inv.photoCount = Math.max(0, inv.photoCount - 1);
-    save();
+    localStorage.setItem('ipro_v5', JSON.stringify(interventions));
     await loadPhotos(currentId);
-    showToast("Supprimé");
-  } catch(e) { showToast("Erreur suppression"); }
+    showToast("Photo enregistrée");
+  } catch(err) { showToast("Erreur d'accès dossier"); }
 }
 
 async function loadPhotos(id) {
@@ -252,56 +158,98 @@ async function loadPhotos(id) {
   const handle = folderHandles[id];
   if(!handle) return;
 
-  try {
-    for await (const entry of handle.values()) {
-      if(entry.kind === 'file') {
-        const file = await entry.getFile();
-        const url = URL.createObjectURL(file);
-        const div = document.createElement('div');
-        div.className = 'photo-item';
-        div.innerHTML = `
-          <img src="${url}" onclick="openLightbox('${url}')">
-          <button class="photo-del" onclick="event.stopPropagation(); deletePhoto('${entry.name}')">✕</button>
-        `;
-        grid.appendChild(div);
-      }
+  for await (const entry of handle.values()) {
+    if(entry.kind === 'file') {
+      const file = await entry.getFile();
+      const url = URL.createObjectURL(file);
+      const div = document.createElement('div');
+      div.className = 'photo-item';
+      
+      const img = document.createElement('img');
+      img.src = url;
+      
+      div.appendChild(img);
+      div.innerHTML += `<button class="photo-del" onclick="event.stopPropagation(); deletePhoto('${entry.name}')">✕</button>`;
+      
+      // Lancer le scan dès que l'image est chargée
+      img.onload = async () => {
+        const code = await scanBarcode(img);
+        if(code) {
+          const badge = document.createElement('div');
+          badge.className = 'barcode-badge';
+          badge.textContent = "🆔 " + code;
+          div.appendChild(badge);
+        }
+      };
+      
+      grid.appendChild(div);
     }
+  }
+}
+
+async function deletePhoto(fileName) {
+  if(!confirm("Supprimer ?")) return;
+  try {
+    await folderHandles[currentId].removeEntry(fileName);
+    const inv = interventions.find(i => i.id === currentId);
+    inv.photoCount = Math.max(0, inv.photoCount - 1);
+    localStorage.setItem('ipro_v5', JSON.stringify(interventions));
+    loadPhotos(currentId);
+  } catch(e) { showToast("Erreur suppression"); }
+}
+
+// FONCTIONS DOSSIERS (IDENTIQUES MAIS FIXÉES)
+async function createIntervention() {
+  const num = document.getElementById('in-num').value.trim();
+  const cli = document.getElementById('in-client').value.trim();
+  if(!num || !cli) return;
+  try {
+    const parent = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const folderName = `${num}_${cli}`.replace(/[^a-z0-9_]/gi, '_');
+    const handle = await parent.getDirectoryHandle(folderName, { create: true });
+    const inv = { id: Date.now(), num, client: cli, folderName, photoCount: 0 };
+    interventions.push(inv);
+    folderHandles[inv.id] = handle;
+    localStorage.setItem('ipro_v5', JSON.stringify(interventions));
+    hideModals(); renderList(); openFolder(inv.id);
   } catch(e) {}
 }
 
-async function refreshPhotoCount(id) {
-  const handle = folderHandles[id];
-  if(!handle) return;
-  let count = 0;
-  for await (const entry of handle.values()) { if(entry.kind === 'file') count++; }
-  const inv = interventions.find(i => i.id === id);
-  inv.photoCount = count;
-  save(); renderList();
+async function openExistingFolder() {
+  try {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    let inv = interventions.find(i => i.folderName === handle.name);
+    if(!inv) {
+      inv = { id: Date.now(), num: handle.name.split('_')[0], client: handle.name.split('_')[1] || 'Import', folderName: handle.name, photoCount: 0 };
+      interventions.push(inv);
+    }
+    folderHandles[inv.id] = handle;
+    localStorage.setItem('ipro_v5', JSON.stringify(interventions));
+    renderList(); openFolder(inv.id);
+  } catch(e) {}
 }
 
-// NAVIGATION / RENDER
+async function reconnectFolder(id) {
+  try {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const inv = interventions.find(i => i.id === id);
+    if(handle.name !== inv.folderName) { showToast("Dossier différent !"); return; }
+    folderHandles[id] = handle;
+    renderFolderBanner(inv);
+    loadPhotos(id);
+    showToast("Lien ok");
+  } catch(e) {}
+}
+
 function renderList() {
   const container = document.getElementById('list-container');
   container.innerHTML = '';
-  document.getElementById('s-total').textContent = interventions.length;
-  document.getElementById('s-photos').textContent = interventions.reduce((a,b)=>a+b.photoCount, 0);
-  document.getElementById('s-linked').textContent = Object.keys(folderHandles).length;
-
+  document.getElementById('hdr-count').textContent = interventions.length + " dossier(s)";
   interventions.slice().reverse().forEach(inv => {
-    const isLinked = !!folderHandles[inv.id];
     const div = document.createElement('div');
     div.className = 'int-card';
     div.onclick = () => openFolder(inv.id);
-    div.innerHTML = `
-      <div class="card-body">
-        <div class="card-num">${inv.num}</div>
-        <div class="card-name">${inv.client}</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:0.8rem; font-weight:800;">${inv.photoCount} 📷</div>
-        <div style="font-size:0.6rem; color:${isLinked?'var(--green)':'var(--accent)'}">${isLinked?'RELIÉ':'DÉCONNECTÉ'}</div>
-      </div>
-    `;
+    div.innerHTML = `<div class="card-body"><div class="card-num">${inv.num}</div><div class="card-name">${inv.client}</div></div><div>${inv.photoCount} 📷</div>`;
     container.appendChild(div);
   });
 }
@@ -320,19 +268,15 @@ function openFolder(id) {
 function renderFolderBanner(inv) {
   const banner = document.getElementById('folder-banner');
   const isLinked = !!folderHandles[inv.id];
-  if(isLinked) {
-    banner.className = 'folder-banner linked';
-    banner.innerHTML = `✅ Dossier relié : ${inv.folderName}`;
-  } else {
-    banner.className = 'folder-banner unlinked';
-    banner.innerHTML = `⚠️ Non relié. Cliquez sur "Relier" et sél. le dossier : ${inv.folderName}`;
-  }
+  banner.className = 'folder-banner ' + (isLinked ? 'linked' : 'unlinked');
+  banner.innerHTML = isLinked ? `✅ Dossier : ${inv.folderName}` : `⚠️ Déconnecté : ${inv.folderName}`;
 }
 
 function deleteIntervention() {
-    if(!confirm("Supprimer l'intervention de la liste ?")) return;
-    interventions = interventions.filter(i => i.id !== currentId);
-    save(); goHome();
+  if(!confirm("Supprimer de la liste ?")) return;
+  interventions = interventions.filter(i => i.id !== currentId);
+  localStorage.setItem('ipro_v5', JSON.stringify(interventions));
+  goHome();
 }
 
 function goHome() {
@@ -344,8 +288,6 @@ function goHome() {
 
 function showModal(id) { document.getElementById(id).style.display = 'flex'; }
 function hideModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); }
-function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display='flex'; }
-function hideLightbox() { document.getElementById('lightbox').style.display='none'; }
 </script>
 </body>
 </html>
