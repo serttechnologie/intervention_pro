@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>InterventionPro</title>
+<title>InterventionPro v4</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -14,487 +14,338 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 60% 40% at 10% 0%,rgba(255,107,43,0.07) 0%,transparent 60%),
-  radial-gradient(ellipse 50% 60% at 90% 100%,rgba(79,142,255,0.05) 0%,transparent 60%);}
 
+/* UI Elements */
 .hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px);
   padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.logo{font-weight:800;font-size:1.15rem;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;}
+.logo{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:8px;}
 .logo-accent{color:var(--accent);}
 
-.view{display:none;padding:20px;max-width:580px;margin:0 auto;position:relative;z-index:1;}
+.view{display:none;padding:20px;max-width:580px;margin:0 auto;}
 .view.active{display:block;}
 
-.btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:all 0.18s;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:0.9rem;}
-.btn:active{transform:scale(0.95);opacity:0.8;}
-.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none !important;}
-.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:14px 22px;
-  box-shadow:0 6px 20px var(--glow);}
+.btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:0.15s;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
+.btn:active{transform:scale(0.95);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:14px 22px;box-shadow:0 6px 20px var(--glow);}
 .btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
-.btn-green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);padding:12px 18px;}
-.btn-danger{background:var(--red-bg);color:var(--red);padding:12px 16px;}
+.btn-danger{background:var(--red-bg);color:var(--red);padding:10px 14px;}
 
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
 .stat-card{background:var(--card);padding:14px;border-radius:var(--radius);border:1px solid var(--border);text-align:center;}
 .stat-val{display:block;font-size:1.4rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono';}
-.stat-lbl{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.stat-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;}
 
+/* Cards */
 .int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-  padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;}
-.int-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),#ff4500);border-radius:3px 0 0 3px;}
-.int-card:active{transform:scale(0.98);}
-.card-icon{width:42px;height:42px;background:rgba(255,107,43,0.1);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:0.85rem;flex-shrink:0;}
+  padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;}
 .card-body{flex:1;min-width:0;}
-.card-num{font-size:0.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;}
-.card-name{font-size:0.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.card-meta{font-size:0.75rem;color:var(--muted);margin-top:3px;}
-.card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
-.badge{font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;}
-.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
-.badge-orange{background:rgba(255,107,43,0.1);color:var(--accent);border:1px solid rgba(255,107,43,0.25);}
-.photo-count{font-family:'JetBrains Mono';font-size:1rem;font-weight:800;color:var(--accent);}
+.card-num{font-size:0.75rem;font-weight:700;color:var(--accent);}
+.card-name{font-size:0.95rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-.folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
-.folder-banner.linked{background:var(--green-bg);border:1px solid var(--green-border);}
-.folder-banner.unlinked{background:rgba(255,107,43,0.08);border:1px solid rgba(255,107,43,0.2);}
-.folder-banner-icon{font-size:1.4rem;flex-shrink:0;}
-.folder-banner-info{flex:1;min-width:0;}
-.folder-banner-title{font-size:0.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.folder-banner-title.green{color:var(--green);}
-.folder-banner-title.orange{color:var(--accent);}
-.folder-banner-sub{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+/* Grille Photos */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.photo-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card);position:relative;border:1px solid var(--border);}
+.photo-item img{width:100%;height:100%;object-fit:cover;}
+.photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;
+  width:24px;height:24px;border-radius:50%;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.5);}
 
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.photo-item{aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--card);
-  border:1px solid var(--border);cursor:pointer;position:relative;}
-.photo-item img{width:100%;height:100%;object-fit:cover;display:block;}
-.photo-num{position:absolute;bottom:4px;left:4px;font-size:0.65rem;font-weight:700;
-  background:rgba(0,0,0,0.65);color:#fff;padding:1px 5px;border-radius:4px;}
+/* Banner Status */
+.folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;font-size:0.85rem;}
+.linked{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
+.unlinked{background:rgba(255,107,43,0.1);border:1px solid rgba(255,107,43,0.2);color:var(--accent);}
 
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);
-  backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--card);width:100%;max-width:440px;border-radius:22px;padding:28px;border:1px solid var(--border);}
-.modal-title{font-size:1.1rem;font-weight:800;margin-bottom:20px;}
-.field{margin-bottom:14px;}
-.field label{display:block;font-size:0.72rem;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
-.field input{width:100%;padding:13px 15px;background:#1a1f2b;border:1px solid var(--border);
-  border-radius:10px;color:#fff;font-size:0.95rem;font-family:inherit;outline:none;transition:border-color 0.18s;}
-.field input:focus{border-color:var(--accent);}
-
-.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);
-  z-index:2000;align-items:center;justify-content:center;flex-direction:column;gap:18px;}
-.lightbox img{max-width:95vw;max-height:75vh;border-radius:14px;object-fit:contain;}
-
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  background:#1a1f2b;color:#fff;border:1px solid var(--border);
-  padding:11px 22px;border-radius:30px;font-size:0.82rem;font-weight:600;
-  opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:9999;
-  white-space:nowrap;max-width:88vw;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.5);}
+/* Toast & Lightbox */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1f2b;padding:12px 24px;border-radius:30px;opacity:0;transition:0.3s;z-index:9999;}
 .toast.show{opacity:1;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;align-items:center;justify-content:center;flex-direction:column;}
+.lightbox img{max-width:95vw;max-height:80vh;border-radius:10px;}
 
-.empty{text-align:center;padding:3rem 1rem;color:var(--muted);}
-.empty-icon{font-size:2.8rem;display:block;margin-bottom:12px;}
-
-.section-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;
-  letter-spacing:0.09em;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--card);width:100%;max-width:400px;padding:25px;border-radius:20px;border:1px solid var(--border);}
+input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid var(--border);color:#fff;border-radius:10px;}
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <div class="logo">📷 Intervention<span class="logo-accent">Pro</span></div>
-  <span id="hdr-count" style="font-size:0.78rem;color:var(--muted);">0 intervention</span>
+  <div class="logo">📸 Inter<span class="logo-accent">Pro</span></div>
+  <div id="hdr-count" style="font-size:0.8rem;color:var(--muted);">0 dossiers</div>
 </div>
 
-<!-- ===== LIST ===== -->
+<!-- LISTE -->
 <div class="view active" id="v-list">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-    <h1 style="font-size:1.35rem;font-weight:800;">Interventions</h1>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir</button>
-      <button class="btn btn-primary" id="btn-new">+ Nouveau</button>
-    </div>
+  <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
+    <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir dossier</button>
+    <button class="btn btn-primary" id="btn-new">+ Nouveau</button>
   </div>
-
   <div class="stat-grid">
     <div class="stat-card"><span class="stat-val" id="s-total">0</span><span class="stat-lbl">Dossiers</span></div>
     <div class="stat-card"><span class="stat-val" id="s-photos">0</span><span class="stat-lbl">Photos</span></div>
-    <div class="stat-card"><span class="stat-val" id="s-linked">0</span><span class="stat-lbl">Liés</span></div>
+    <div class="stat-card"><span class="stat-val" id="s-linked">0</span><span class="stat-lbl">Reliés</span></div>
   </div>
-
-  <div class="section-label">Liste</div>
   <div id="list-container"></div>
 </div>
 
-<!-- ===== DETAIL ===== -->
+<!-- DETAIL -->
 <div class="view" id="v-detail">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-    <button class="btn btn-secondary" id="btn-back" style="padding:10px 14px;">←</button>
-    <div style="flex:1;min-width:0;">
-      <div id="d-num" style="font-size:0.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;"></div>
-      <div id="d-title" style="font-size:1.05rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">---</div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;">
+    <button class="btn btn-secondary" id="btn-back">←</button>
+    <div style="flex:1;">
+      <div id="d-num" style="color:var(--accent);font-weight:700;font-size:0.7rem;"></div>
+      <div id="d-title" style="font-weight:800;">---</div>
     </div>
     <button class="btn btn-danger" id="btn-delete">🗑</button>
   </div>
-
   <div id="folder-banner"></div>
-
-  <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:20px;">
-    <button class="btn btn-primary" id="btn-photo">📷 Prendre une photo</button>
-    <button class="btn btn-secondary" id="btn-zip" title="Exporter">📁</button>
-    <button class="btn btn-secondary" id="btn-reconnect-top" title="Relier">🔗</button>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:20px;">
+    <button class="btn btn-primary" id="btn-photo">📸 Prendre Photo</button>
+    <button class="btn btn-secondary" id="btn-reconnect">🔗 Relier</button>
   </div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <span class="section-label" style="margin:0;">Photos</span>
-    <span id="d-count" style="font-family:'JetBrains Mono';font-weight:800;color:var(--accent);">0</span>
-  </div>
-
-  <div id="grid"></div>
+  <div id="grid" class="photo-grid"></div>
   <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none"/>
 </div>
 
-<!-- ===== MODAL CREATE ===== -->
+<!-- MODALS -->
 <div class="overlay" id="m-create">
   <div class="modal">
-    <div class="modal-title">Nouvelle intervention</div>
-    <div class="field">
-      <label>Numéro d'intervention</label>
-      <input type="text" id="in-num" placeholder="ex: INT-042" autocomplete="off"/>
-    </div>
-    <div class="field">
-      <label>Nom du client</label>
-      <input type="text" id="in-client" placeholder="ex: Dupont Jean" autocomplete="off"/>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
-      <button class="btn btn-secondary" id="btn-modal-cancel">Annuler</button>
-      <button class="btn btn-primary" id="btn-modal-create">Créer →</button>
+    <h3>Nouveau dossier</h3>
+    <input type="text" id="in-num" placeholder="Numéro intervention"/>
+    <input type="text" id="in-client" placeholder="Nom client"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="btn btn-secondary" onclick="hideModals()">Annuler</button>
+      <button class="btn btn-primary" id="btn-modal-create">Créer</button>
     </div>
   </div>
 </div>
 
-<!-- ===== LIGHTBOX ===== -->
 <div class="lightbox" id="lightbox">
-  <img id="lb-img" src="" alt=""/>
-  <button class="btn btn-secondary" id="btn-lb-close">Fermer</button>
+  <img id="lb-img" src=""/>
+  <button class="btn btn-secondary" style="margin-top:20px;" onclick="hideLightbox()">Fermer</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-var interventions = JSON.parse(localStorage.getItem('ipro_v3') || '[]');
-var currentId = null;
-var folderHandles = {};
-var photoPreviews = {};
+let interventions = JSON.parse(localStorage.getItem('ipro_v4') || '[]');
+let folderHandles = {}; 
+let photoPreviews = {};
+let currentId = null;
 
+// INIT
 renderList();
-bindEvents();
 
-function bindEvents() {
-  document.getElementById('btn-new').addEventListener('click', function(){ showModal('m-create'); });
-  document.getElementById('btn-open-existing').addEventListener('click', openExistingFolder);
-  document.getElementById('btn-back').addEventListener('click', goHome);
-  document.getElementById('btn-delete').addEventListener('click', deleteCurrent);
-  document.getElementById('btn-photo').addEventListener('click', triggerCamera);
-  document.getElementById('btn-zip').addEventListener('click', exportZip);
-  document.getElementById('btn-reconnect-top').addEventListener('click', function(){ reconnectFolder(currentId); });
-  document.getElementById('btn-modal-cancel').addEventListener('click', hideModals);
-  document.getElementById('btn-modal-create').addEventListener('click', createIntervention);
-  document.getElementById('btn-lb-close').addEventListener('click', hideLightbox);
-  document.getElementById('camera-input').addEventListener('change', handlePhotos);
+// EVENTS
+document.getElementById('btn-new').onclick = () => showModal('m-create');
+document.getElementById('btn-back').onclick = goHome;
+document.getElementById('btn-modal-create').onclick = createIntervention;
+document.getElementById('btn-photo').onclick = () => document.getElementById('camera-input').click();
+document.getElementById('camera-input').onchange = handlePhoto;
+document.getElementById('btn-reconnect').onclick = () => reconnectFolder(currentId);
+document.getElementById('btn-open-existing').onclick = openExistingFolder;
+document.getElementById('btn-delete').onclick = deleteIntervention;
+
+function showToast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-function showToast(msg, duration) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, duration || 2800);
+function save() {
+  localStorage.setItem('ipro_v4', JSON.stringify(interventions));
 }
 
-function saveData() {
-  localStorage.setItem('ipro_v3', JSON.stringify(interventions.map(function(i){
-    return { id:i.id, num:i.num, client:i.client, date:i.date, photoCount:i.photoCount, folderName:i.folderName };
-  })));
-}
-
-function buildFolderName(num, client) {
-  return (num + '_' + client)
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-zA-Z0-9_\- ]/g,'')
-    .replace(/\s+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
-}
-
-function showModal(id) { document.getElementById(id).style.display = 'flex'; }
-function hideModals() { document.querySelectorAll('.overlay').forEach(function(o){ o.style.display='none'; }); }
-function hideLightbox() { document.getElementById('lightbox').style.display = 'none'; }
-function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display = 'flex'; }
-
-function renderList() {
-  var count = interventions.length;
-  var totalPhotos = interventions.reduce(function(a,b){ return a+(b.photoCount||0); }, 0);
-  var linkedCount = interventions.filter(function(i){ return !!folderHandles[i.id]; }).length;
-
-  document.getElementById('hdr-count').textContent = count + ' intervention' + (count>1?'s':'');
-  document.getElementById('s-total').textContent = count;
-  document.getElementById('s-photos').textContent = totalPhotos;
-  document.getElementById('s-linked').textContent = linkedCount;
-
-  var cont = document.getElementById('list-container');
-  if (!count) {
-    cont.innerHTML = '<div class="empty"><span class="empty-icon">📁</span><p>Aucune intervention.<br>Crée-en une ou ouvre un dossier existant.</p></div>';
-    return;
-  }
-
-  cont.innerHTML = interventions.slice().reverse().map(function(i){
-    var isLinked = !!folderHandles[i.id];
-    return '<div class="int-card" data-id="' + i.id + '">' +
-      '<div class="card-icon">' + esc(i.num).slice(0,3).toUpperCase() + '</div>' +
-      '<div class="card-body">' +
-        '<div class="card-num">' + esc(i.num) + '</div>' +
-        '<div class="card-name">' + esc(i.client) + '</div>' +
-        '<div class="card-meta">📅 ' + i.date + '</div>' +
-      '</div>' +
-      '<div class="card-right">' +
-        '<span class="badge ' + (isLinked?'badge-green':'badge-orange') + '">' + (isLinked?'LIÉ':'NON LIÉ') + '</span>' +
-        '<span class="photo-count">📷 ' + (i.photoCount||0) + '</span>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-
-  document.querySelectorAll('.int-card').forEach(function(card){
-    card.addEventListener('click', function(){ openFolder(parseInt(this.dataset.id)); });
-  });
+// GESTION DOSSIER
+async function verifyPermission(handle) {
+  const opts = { mode: 'readwrite' };
+  if ((await handle.queryPermission(opts)) === 'granted') return true;
+  if ((await handle.requestPermission(opts)) === 'granted') return true;
+  return false;
 }
 
 async function createIntervention() {
-  var num = document.getElementById('in-num').value.trim();
-  var cli = document.getElementById('in-client').value.trim();
-  if (!num || !cli) { showToast('Remplis les deux champs !'); return; }
-  if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
-
+  const num = document.getElementById('in-num').value.trim();
+  const cli = document.getElementById('in-client').value.trim();
+  if(!num || !cli) return;
   try {
-    hideModals();
-    showToast('Choisis le dossier parent...');
-    var parentHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    var folderName = buildFolderName(num, cli);
-    var subDir = await parentHandle.getDirectoryHandle(folderName, { create: true });
-
-    var inv = { id: Date.now(), num:num, client:cli, date:new Date().toLocaleDateString('fr-FR'), photoCount:0, folderName:folderName };
+    const parent = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const folderName = `${num}_${cli}`.replace(/[^a-z0-9_]/gi, '_');
+    const handle = await parent.getDirectoryHandle(folderName, { create: true });
+    
+    const inv = { id: Date.now(), num, client: cli, folderName, photoCount: 0 };
     interventions.push(inv);
-    folderHandles[inv.id] = subDir;
-    saveData();
-    renderList();
-    showToast('Dossier créé : ' + folderName);
-    document.getElementById('in-num').value = '';
-    document.getElementById('in-client').value = '';
-    openFolder(inv.id);
-  } catch(e) {
-    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
-  }
+    folderHandles[inv.id] = handle;
+    save(); hideModals(); renderList(); openFolder(inv.id);
+  } catch(e) { console.error(e); }
 }
 
 async function openExistingFolder() {
-  if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
   try {
-    showToast('Choisis le dossier de l\'intervention...');
-    var subDir = await window.showDirectoryPicker({ mode: 'readwrite' });
-    var folderName = subDir.name;
-
-    var existing = interventions.find(function(i){ return i.folderName === folderName; });
-    if (existing) {
-      folderHandles[existing.id] = subDir;
-      showToast('Dossier retrouvé !');
-      renderList();
-      openFolder(existing.id);
-      return;
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const folderName = handle.name;
+    let inv = interventions.find(i => i.folderName === folderName);
+    if(!inv) {
+      inv = { id: Date.now(), num: folderName.split('_')[0], client: folderName.split('_')[1] || 'Import', folderName, photoCount: 0 };
+      interventions.push(inv);
     }
+    folderHandles[inv.id] = handle;
+    save(); renderList(); openFolder(inv.id);
+  } catch(e) {}
+}
 
-    var photoCount = 0;
-    for await (var entry of subDir.values()) {
-      if (entry.kind === 'file') photoCount++;
+async function reconnectFolder(id) {
+  try {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const inv = interventions.find(i => i.id === id);
+    if(handle.name !== inv.folderName) {
+      showToast("Le nom ne correspond pas !"); return;
     }
+    folderHandles[id] = handle;
+    renderFolderBanner(inv);
+    showToast("Lien rétabli");
+    refreshPhotoCount(id);
+  } catch(e) {}
+}
 
-    var parts = folderName.split('_');
-    var num = parts[0] || folderName;
-    var client = parts.slice(1).join(' ') || 'Inconnu';
-
-    var inv = { id: Date.now(), num:num, client:client, date:new Date().toLocaleDateString('fr-FR'), photoCount:photoCount, folderName:folderName };
-    interventions.push(inv);
-    folderHandles[inv.id] = subDir;
-    saveData();
-    renderList();
-    showToast('Ouvert : ' + folderName);
-    openFolder(inv.id);
-  } catch(e) {
-    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
+// GESTION PHOTOS
+async function handlePhoto(e) {
+  const file = e.target.files[0];
+  if(!file || !currentId) return;
+  
+  const handle = folderHandles[currentId];
+  if(!handle || !await verifyPermission(handle)) {
+    showToast("Dossier non relié !"); return;
   }
+
+  const inv = interventions.find(i => i.id === currentId);
+  const fileName = `IMG_${Date.now()}.jpg`;
+  
+  try {
+    const fileHandle = await handle.getFileHandle(fileName, { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(file);
+    await writable.close();
+    
+    inv.photoCount++;
+    save();
+    await loadPhotos(currentId); 
+    showToast("Photo enregistrée");
+  } catch(err) { showToast("Erreur d'écriture"); }
+}
+
+async function deletePhoto(fileName) {
+  if(!confirm("Supprimer cette photo ?")) return;
+  const handle = folderHandles[currentId];
+  try {
+    await handle.removeEntry(fileName);
+    const inv = interventions.find(i => i.id === currentId);
+    inv.photoCount = Math.max(0, inv.photoCount - 1);
+    save();
+    await loadPhotos(currentId);
+    showToast("Supprimé");
+  } catch(e) { showToast("Erreur suppression"); }
+}
+
+async function loadPhotos(id) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const handle = folderHandles[id];
+  if(!handle) return;
+
+  try {
+    for await (const entry of handle.values()) {
+      if(entry.kind === 'file') {
+        const file = await entry.getFile();
+        const url = URL.createObjectURL(file);
+        const div = document.createElement('div');
+        div.className = 'photo-item';
+        div.innerHTML = `
+          <img src="${url}" onclick="openLightbox('${url}')">
+          <button class="photo-del" onclick="event.stopPropagation(); deletePhoto('${entry.name}')">✕</button>
+        `;
+        grid.appendChild(div);
+      }
+    }
+  } catch(e) {}
+}
+
+async function refreshPhotoCount(id) {
+  const handle = folderHandles[id];
+  if(!handle) return;
+  let count = 0;
+  for await (const entry of handle.values()) { if(entry.kind === 'file') count++; }
+  const inv = interventions.find(i => i.id === id);
+  inv.photoCount = count;
+  save(); renderList();
+}
+
+// NAVIGATION / RENDER
+function renderList() {
+  const container = document.getElementById('list-container');
+  container.innerHTML = '';
+  document.getElementById('s-total').textContent = interventions.length;
+  document.getElementById('s-photos').textContent = interventions.reduce((a,b)=>a+b.photoCount, 0);
+  document.getElementById('s-linked').textContent = Object.keys(folderHandles).length;
+
+  interventions.slice().reverse().forEach(inv => {
+    const isLinked = !!folderHandles[inv.id];
+    const div = document.createElement('div');
+    div.className = 'int-card';
+    div.onclick = () => openFolder(inv.id);
+    div.innerHTML = `
+      <div class="card-body">
+        <div class="card-num">${inv.num}</div>
+        <div class="card-name">${inv.client}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.8rem; font-weight:800;">${inv.photoCount} 📷</div>
+        <div style="font-size:0.6rem; color:${isLinked?'var(--green)':'var(--accent)'}">${isLinked?'RELIÉ':'DÉCONNECTÉ'}</div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
 }
 
 function openFolder(id) {
   currentId = id;
-  var inv = interventions.find(function(x){ return x.id === id; });
-  if (!inv) return;
+  const inv = interventions.find(i => i.id === id);
   document.getElementById('d-num').textContent = inv.num;
   document.getElementById('d-title').textContent = inv.client;
   document.getElementById('v-list').classList.remove('active');
   document.getElementById('v-detail').classList.add('active');
   renderFolderBanner(inv);
-  renderGrid(inv);
+  loadPhotos(id);
 }
 
 function renderFolderBanner(inv) {
-  var el = document.getElementById('folder-banner');
-  var btn = document.getElementById('btn-photo');
-  var isLinked = !!folderHandles[inv.id];
-
-  if (isLinked) {
-    el.innerHTML = '<div class="folder-banner linked">' +
-      '<div class="folder-banner-icon">📁</div>' +
-      '<div class="folder-banner-info">' +
-        '<div class="folder-banner-title green">' + esc(inv.folderName) + '</div>' +
-        '<div class="folder-banner-sub">Dossier lié - Enregistrement direct</div>' +
-      '</div></div>';
-    btn.disabled = false;
+  const banner = document.getElementById('folder-banner');
+  const isLinked = !!folderHandles[inv.id];
+  if(isLinked) {
+    banner.className = 'folder-banner linked';
+    banner.innerHTML = `✅ Dossier relié : ${inv.folderName}`;
   } else {
-    el.innerHTML = '<div class="folder-banner unlinked">' +
-      '<div class="folder-banner-icon">🔗</div>' +
-      '<div class="folder-banner-info">' +
-        '<div class="folder-banner-title orange">Dossier non lié</div>' +
-        '<div class="folder-banner-sub">Appuie sur 🔗 pour reconnecter <strong>' + esc(inv.folderName) + '</strong></div>' +
-      '</div></div>';
-    btn.disabled = true;
+    banner.className = 'folder-banner unlinked';
+    banner.innerHTML = `⚠️ Non relié. Cliquez sur "Relier" et sél. le dossier : ${inv.folderName}`;
   }
 }
 
-async function reconnectFolder(id) {
-  var inv = interventions.find(function(x){ return x.id === id; });
-  if (!inv) return;
-  try {
-    showToast('Choisis le dossier parent contenant "' + inv.folderName + '"...');
-    var parentHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    var subDir = await parentHandle.getDirectoryHandle(inv.folderName, { create: false });
-    folderHandles[id] = subDir;
-    renderFolderBanner(inv);
-    renderList();
-    showToast('Reconnecté : ' + inv.folderName);
-  } catch(e) {
-    if (e.name === 'NotFoundError') showToast('Dossier introuvable ici');
-    else if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
-  }
-}
-
-function triggerCamera() {
-  var inp = document.getElementById('camera-input');
-  inp.value = '';
-  inp.click();
-}
-
-async function handlePhotos(e) {
-  var files = Array.from(e.target.files);
-  if (!files.length || !currentId) return;
-  var inv = interventions.find(function(x){ return x.id === currentId; });
-  var subDir = folderHandles[currentId];
-  if (!subDir) { showToast('Relie le dossier d\'abord !'); return; }
-  if (!photoPreviews[currentId]) photoPreviews[currentId] = [];
-
-  var saved = 0;
-  for (var idx = 0; idx < files.length; idx++) {
-    var file = files[idx];
-    try {
-      var nextNum = (inv.photoCount || 0) + 1;
-      var fileName = inv.folderName + '_' + String(nextNum).padStart(3,'0') + '.jpg';
-      var fh = await subDir.getFileHandle(fileName, { create: true });
-      var wr = await fh.createWritable();
-      await wr.write(file);
-      await wr.close();
-      
-      var url = URL.createObjectURL(file);
-      photoPreviews[currentId].push({ name: fileName, url: url });
-      inv.photoCount++;
-      saved++;
-    } catch(err) {
-      console.error(err);
-    }
-  }
-
-  saveData();
-  renderGrid(inv);
-  renderList();
-  renderFolderBanner(inv);
-  if (saved) showToast(saved + ' photo(s) enregistrée(s) !');
-}
-
-function renderGrid(inv) {
-  var grid = document.getElementById('grid');
-  var previews = photoPreviews[inv.id] || [];
-  document.getElementById('d-count').textContent = inv.photoCount || 0;
-
-  if (!previews.length) {
-    grid.innerHTML = inv.photoCount > 0
-      ? '<div class="empty"><p>' + inv.photoCount + ' photos dans le dossier.<br><small>Aperçus disponibles après prise de vue.</small></p></div>'
-      : '<div class="empty"><p>Aucune photo.</p></div>';
-    return;
-  }
-
-  grid.innerHTML = '<div class="photo-grid">' + previews.map(function(p, idx){
-    return '<div class="photo-item" data-url="' + p.url + '">' +
-      '<img src="' + p.url + '" alt="Photo"/>' +
-      '<span class="photo-num">' + (idx+1) + '</span>' +
-    '</div>';
-  }).join('') + '</div>';
-
-  document.querySelectorAll('.photo-item').forEach(function(item){
-    item.addEventListener('click', function(){ openLightbox(this.dataset.url); });
-  });
-}
-
-async function exportZip() {
-  var inv = interventions.find(function(x){ return x.id === currentId; });
-  if (!inv || !folderHandles[currentId]) { showToast('Relie le dossier d\'abord !'); return; }
-  try {
-    showToast('Choisis le dossier de destination...');
-    var destParent = await window.showDirectoryPicker({ mode: 'readwrite' });
-    var destFolder = await destParent.getDirectoryHandle(inv.folderName, { create: true });
-    var copied = 0;
-    for await (var entry of folderHandles[currentId].values()) {
-      if (entry.kind !== 'file') continue;
-      var srcFile = await entry.getFile();
-      var destFile = await destFolder.getFileHandle(entry.name, { create: true });
-      var wr = await destFile.createWritable();
-      await wr.write(srcFile);
-      await wr.close();
-      copied++;
-    }
-    showToast(copied + ' photos exportées !');
-  } catch(e) {
-    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
-  }
-}
-
-function deleteCurrent() {
-  if (!confirm('Supprimer l\'intervention de la liste ? (Les fichiers restent sur le téléphone)')) return;
-  interventions = interventions.filter(function(x){ return x.id !== currentId; });
-  delete folderHandles[currentId];
-  delete photoPreviews[currentId];
-  saveData();
-  goHome();
+function deleteIntervention() {
+    if(!confirm("Supprimer l'intervention de la liste ?")) return;
+    interventions = interventions.filter(i => i.id !== currentId);
+    save(); goHome();
 }
 
 function goHome() {
+  currentId = null;
   document.getElementById('v-detail').classList.remove('active');
   document.getElementById('v-list').classList.add('active');
   renderList();
 }
 
-function esc(str){ 
-  if(!str) return "";
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); 
-}
+function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+function hideModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); }
+function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display='flex'; }
+function hideLightbox() { document.getElementById('lightbox').style.display='none'; }
 </script>
 </body>
 </html>
