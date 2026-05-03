@@ -3,152 +3,212 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>InterventionPro Ultra</title>
+<title>InterventionPro</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #05070a; --card: #12161f; --accent: #ff6b2b; --accent-glow: rgba(255,107,43,0.3);
-  --text: #ffffff; --muted: #808ba0; --success: #00ff88; --border: rgba(255,255,255,0.08);
-  --radius: 18px;
+  --bg:#05070a; --card:#12161f; --accent:#ff6b2b; --glow:rgba(255,107,43,0.3);
+  --text:#ffffff; --muted:#808ba0; --green:#00ff88; --green-bg:rgba(0,255,136,0.1);
+  --green-border:rgba(0,255,136,0.25); --red:#ff5050; --red-bg:rgba(255,60,60,0.15);
+  --border:rgba(255,255,255,0.08); --radius:16px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 10% 0%,rgba(255,107,43,0.07) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 60% at 90% 100%,rgba(79,142,255,0.05) 0%,transparent 60%);}
 
-.hdr { position: sticky; top: 0; z-index: 100; background: rgba(5,7,10,0.8); backdrop-filter: blur(15px); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
-.logo span { color: var(--accent); }
+.hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px);
+  padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.logo{font-weight:800;font-size:1.15rem;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;}
+.logo-accent{color:var(--accent);}
 
-.view { display: none; padding: 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s ease; }
-.view.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.view{display:none;padding:20px;max-width:580px;margin:0 auto;position:relative;z-index:1;}
+.view.active{display:block;}
 
-.btn { border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
-.btn-primary { background: linear-gradient(135deg, var(--accent), #ff9060); color: white; padding: 14px 24px; box-shadow: 0 8px 20px var(--accent-glow); }
-.btn-secondary { background: var(--card); border: 1px solid var(--border); color: white; padding: 12px 20px; }
-.btn-green { background: rgba(0,255,136,0.15); color: var(--success); border: 1px solid rgba(0,255,136,0.3); padding: 12px 20px; }
-.btn-danger { background: rgba(255, 60, 60, 0.15); color: #ff5050; padding: 12px; }
-.btn:active { transform: scale(0.96); opacity: 0.8; }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:all 0.18s;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:0.9rem;}
+.btn:active{transform:scale(0.95);opacity:0.8;}
+.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none !important;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:14px 22px;
+  box-shadow:0 6px 20px var(--glow);}
+.btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
+.btn-green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);padding:12px 18px;}
+.btn-danger{background:var(--red-bg);color:var(--red);padding:12px 16px;}
 
-.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
-.stat-card { background: var(--card); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
-.stat-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono'; }
-.stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.stat-card{background:var(--card);padding:14px;border-radius:var(--radius);border:1px solid var(--border);text-align:center;}
+.stat-val{display:block;font-size:1.4rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono';}
+.stat-lbl{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 
-.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
-.card:active { transform: scale(0.98); }
-.card-icon { width: 45px; height: 45px; background: rgba(255,107,43,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 800; font-size: 1rem; }
+.int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;}
+.int-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),#ff4500);border-radius:3px 0 0 3px;}
+.int-card:active{transform:scale(0.98);}
+.card-icon{width:42px;height:42px;background:rgba(255,107,43,0.1);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:0.85rem;flex-shrink:0;}
+.card-body{flex:1;min-width:0;}
+.card-num{font-size:0.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;}
+.card-name{font-size:0.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-meta{font-size:0.75rem;color:var(--muted);margin-top:3px;}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.badge{font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.badge-orange{background:rgba(255,107,43,0.1);color:var(--accent);border:1px solid rgba(255,107,43,0.25);}
+.photo-count{font-family:'JetBrains Mono';font-size:1rem;font-weight:800;color:var(--accent);}
 
-.folder-banner { border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
-.folder-banner.linked { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.25); color: var(--success); }
-.folder-banner.unlinked { background: rgba(255,107,43,0.1); border: 1px solid rgba(255,107,43,0.25); color: var(--accent); }
-.folder-banner-icon { font-size: 1.4rem; flex-shrink: 0; }
-.folder-banner-info { flex: 1; }
-.folder-banner-title { font-weight: 700; }
-.folder-banner-sub { font-size: 0.75rem; opacity: 0.75; margin-top: 2px; }
+.folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.folder-banner.linked{background:var(--green-bg);border:1px solid var(--green-border);}
+.folder-banner.unlinked{background:rgba(255,107,43,0.08);border:1px solid rgba(255,107,43,0.2);}
+.folder-banner-icon{font-size:1.4rem;flex-shrink:0;}
+.folder-banner-info{flex:1;min-width:0;}
+.folder-banner-title{font-size:0.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.folder-banner-title.green{color:var(--green);}
+.folder-banner-title.orange{color:var(--accent);}
+.folder-banner-sub{font-size:0.72rem;color:var(--muted);margin-top:2px;}
 
-.photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.photo-item { aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--card); border: 1px solid var(--border); cursor: pointer; }
-.photo-item img { width: 100%; height: 100%; object-fit: cover; }
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.photo-item{aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--card);
+  border:1px solid var(--border);cursor:pointer;position:relative;}
+.photo-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-num{position:absolute;bottom:4px;left:4px;font-size:0.65rem;font-weight:700;
+  background:rgba(0,0,0,0.65);color:#fff;padding:1px 5px;border-radius:4px;}
 
-.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; padding: 20px; align-items: center; justify-content: center; }
-.modal { background: var(--card); width: 100%; max-width: 450px; border-radius: 24px; padding: 30px; border: 1px solid var(--border); }
-.modal h3 { margin-bottom: 20px; font-size: 1.2rem; }
-.modal input { width: 100%; padding: 16px; background: #1a1f2b; border: 1px solid var(--border); border-radius: 12px; color: white; margin-bottom: 14px; font-size: 1rem; font-family: inherit; outline: none; }
-.modal input:focus { border-color: var(--accent); }
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--card);width:100%;max-width:440px;border-radius:22px;padding:28px;border:1px solid var(--border);}
+.modal-title{font-size:1.1rem;font-weight:800;margin-bottom:20px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:0.72rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.field input{width:100%;padding:13px 15px;background:#1a1f2b;border:1px solid var(--border);
+  border-radius:10px;color:#fff;font-size:0.95rem;font-family:inherit;outline:none;transition:border-color 0.18s;}
+.field input:focus{border-color:var(--accent);}
 
-.lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
-.lightbox img { max-width: 95vw; max-height: 75vh; border-radius: 15px; object-fit: contain; }
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);
+  z-index:2000;align-items:center;justify-content:center;flex-direction:column;gap:18px;}
+.lightbox img{max-width:95vw;max-height:75vh;border-radius:14px;object-fit:contain;}
 
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1f2b; color: white; border: 1px solid var(--border); padding: 12px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 9999; white-space: nowrap; max-width: 90vw; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-.toast.show { opacity: 1; }
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  background:#1a1f2b;color:#fff;border:1px solid var(--border);
+  padding:11px 22px;border-radius:30px;font-size:0.82rem;font-weight:600;
+  opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:9999;
+  white-space:nowrap;max-width:88vw;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.5);}
+.toast.show{opacity:1;}
 
-.no-photos { text-align: center; padding: 3rem 1rem; color: var(--muted); }
-.no-photos-icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted);}
+.empty-icon{font-size:2.8rem;display:block;margin-bottom:12px;}
+
+.section-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:0.09em;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <div class="logo">&#128247; <span>INTER</span>PRO</div>
-  <span id="hdr-count" style="font-size:0.8rem;color:var(--muted);">0 intervention</span>
+  <div class="logo">📷 Intervention<span class="logo-accent">Pro</span></div>
+  <span id="hdr-count" style="font-size:0.78rem;color:var(--muted);">0 intervention</span>
 </div>
 
-<!-- LIST -->
+<!-- ===== LIST ===== -->
 <div class="view active" id="v-list">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-    <h1 style="font-size:1.5rem">Interventions</h1>
+    <h1 style="font-size:1.35rem;font-weight:800;">Interventions</h1>
     <div style="display:flex;gap:8px;">
-      <button class="btn btn-green" onclick="openExistingFolder()" style="font-size:0.8rem;padding:10px 14px;">&#128194; Ouvrir</button>
-      <button class="btn btn-primary" onclick="showModal('m-create')">+ Nouveau</button>
+      <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir</button>
+      <button class="btn btn-primary" id="btn-new">+ Nouveau</button>
     </div>
   </div>
+
   <div class="stat-grid">
     <div class="stat-card"><span class="stat-val" id="s-total">0</span><span class="stat-lbl">Dossiers</span></div>
     <div class="stat-card"><span class="stat-val" id="s-photos">0</span><span class="stat-lbl">Photos</span></div>
-    <div class="stat-card"><span class="stat-val" id="s-linked">0</span><span class="stat-lbl">Lies</span></div>
+    <div class="stat-card"><span class="stat-val" id="s-linked">0</span><span class="stat-lbl">Liés</span></div>
   </div>
+
+  <div class="section-label">Liste</div>
   <div id="list-container"></div>
 </div>
 
-<!-- DETAIL -->
+<!-- ===== DETAIL ===== -->
 <div class="view" id="v-detail">
-  <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;">
-    <button class="btn btn-secondary" onclick="goHome()" style="padding:10px 16px;">&#8592;</button>
-    <div style="flex:1">
-      <h2 id="d-title" style="font-size:1.2rem;margin-bottom:2px">---</h2>
-      <p id="d-subtitle" style="color:var(--muted);font-size:0.8rem">---</p>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+    <button class="btn btn-secondary" id="btn-back" style="padding:10px 14px;">←</button>
+    <div style="flex:1;min-width:0;">
+      <div id="d-num" style="font-size:0.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;"></div>
+      <div id="d-title" style="font-size:1.05rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">---</div>
     </div>
-    <button class="btn btn-danger" onclick="deleteCurrent()">&#128465;</button>
+    <button class="btn btn-danger" id="btn-delete">🗑</button>
   </div>
 
-  <div id="folder-banner-container"></div>
+  <div id="folder-banner"></div>
 
-  <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:20px;">
-    <button class="btn btn-primary" id="btn-photo" onclick="capturePhoto()">&#128247; Prendre une photo</button>
+  <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:20px;">
+    <button class="btn btn-primary" id="btn-photo">📷 Prendre une photo</button>
+    <button class="btn btn-secondary" id="btn-zip" title="Exporter">📁</button>
+    <button class="btn btn-secondary" id="btn-reconnect-top" title="Relier">🔗</button>
   </div>
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <span style="font-size:0.85rem;color:var(--muted);">Photos enregistrees</span>
-    <span id="d-count" style="font-weight:800;font-family:'JetBrains Mono';color:var(--accent);">0</span>
+    <span class="section-label" style="margin:0;">Photos</span>
+    <span id="d-count" style="font-family:'JetBrains Mono';font-weight:800;color:var(--accent);">0</span>
   </div>
 
   <div id="grid"></div>
   <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none"/>
 </div>
 
-<!-- MODAL CREATION -->
+<!-- ===== MODAL CREATE ===== -->
 <div class="overlay" id="m-create">
   <div class="modal">
-    <h3>Nouvelle Intervention</h3>
-    <input type="text" id="in-num" placeholder="N Intervention (ex: 2026-001)" autocomplete="off"/>
-    <input type="text" id="in-client" placeholder="Client / Site" autocomplete="off"/>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-      <button class="btn btn-secondary" onclick="hideModals()">ANNULER</button>
-      <button class="btn btn-primary" onclick="addIntervention()">CREER</button>
+    <div class="modal-title">Nouvelle intervention</div>
+    <div class="field">
+      <label>Numéro d'intervention</label>
+      <input type="text" id="in-num" placeholder="ex: INT-042" autocomplete="off"/>
+    </div>
+    <div class="field">
+      <label>Nom du client</label>
+      <input type="text" id="in-client" placeholder="ex: Dupont Jean" autocomplete="off"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+      <button class="btn btn-secondary" id="btn-modal-cancel">Annuler</button>
+      <button class="btn btn-primary" id="btn-modal-create">Créer →</button>
     </div>
   </div>
 </div>
 
-<!-- LIGHTBOX -->
+<!-- ===== LIGHTBOX ===== -->
 <div class="lightbox" id="lightbox">
   <img id="lb-img" src="" alt=""/>
-  <button class="btn btn-secondary" onclick="hideLightbox()">FERMER</button>
+  <button class="btn btn-secondary" id="btn-lb-close">Fermer</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ---- State ----
-var interventions = JSON.parse(localStorage.getItem('ipro_v2') || '[]');
+var interventions = JSON.parse(localStorage.getItem('ipro_v3') || '[]');
 var currentId = null;
-var folderHandles = {}; // RAM only
-var photoPreviews = {}; // RAM only: id -> [{name, url}]
+var folderHandles = {};
+var photoPreviews = {};
 
-// ---- Init ----
 renderList();
+bindEvents();
 
-// ---- Toast ----
+function bindEvents() {
+  document.getElementById('btn-new').addEventListener('click', function(){ showModal('m-create'); });
+  document.getElementById('btn-open-existing').addEventListener('click', openExistingFolder);
+  document.getElementById('btn-back').addEventListener('click', goHome);
+  document.getElementById('btn-delete').addEventListener('click', deleteCurrent);
+  document.getElementById('btn-photo').addEventListener('click', triggerCamera);
+  document.getElementById('btn-zip').addEventListener('click', exportZip);
+  document.getElementById('btn-reconnect-top').addEventListener('click', function(){ reconnectFolder(currentId); });
+  document.getElementById('btn-modal-cancel').addEventListener('click', hideModals);
+  document.getElementById('btn-modal-create').addEventListener('click', createIntervention);
+  document.getElementById('btn-lb-close').addEventListener('click', hideLightbox);
+  document.getElementById('camera-input').addEventListener('change', handlePhotos);
+}
+
 function showToast(msg, duration) {
   var t = document.getElementById('toast');
   t.textContent = msg;
@@ -156,124 +216,65 @@ function showToast(msg, duration) {
   setTimeout(function(){ t.classList.remove('show'); }, duration || 2800);
 }
 
-// ---- Save ----
 function saveData() {
-  localStorage.setItem('ipro_v2', JSON.stringify(interventions.map(function(i) {
-    return { id: i.id, num: i.num, client: i.client, date: i.date, photoCount: i.photoCount, folderName: i.folderName };
+  localStorage.setItem('ipro_v3', JSON.stringify(interventions.map(function(i){
+    return { id:i.id, num:i.num, client:i.client, date:i.date, photoCount:i.photoCount, folderName:i.folderName };
   })));
 }
 
-// ---- Folder name builder ----
 function buildFolderName(num, client) {
   return (num + '_' + client)
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9_\- ]/g, '')
-    .replace(/\s+/g, '_')
-    .replace(/_+/g, '_')
-    .replace(/^_|_$/g, '');
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-zA-Z0-9_\- ]/g,'')
+    .replace(/\s+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
 }
 
-// ---- Modals ----
 function showModal(id) { document.getElementById(id).style.display = 'flex'; }
-function hideModals() { document.querySelectorAll('.overlay').forEach(function(o){ o.style.display = 'none'; }); }
-
-// ---- Lightbox ----
-function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display = 'flex'; }
+function hideModals() { document.querySelectorAll('.overlay').forEach(function(o){ o.style.display='none'; }); }
 function hideLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display = 'flex'; }
 
-// ---- Ouvrir un dossier existant ----
-async function openExistingFolder() {
-  if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
-  try {
-    showToast('Choisis le dossier de l'intervention...');
-    // L'utilisateur choisit DIRECTEMENT le sous-dossier (ex: INT-042_Dupont_Jean)
-    var subDir = await window.showDirectoryPicker({ mode: 'readwrite' });
-    var folderName = subDir.name;
-
-    // Verifier si cette intervention existe deja
-    var existing = interventions.find(function(i){ return i.folderName === folderName; });
-
-    if (existing) {
-      // Deja dans la liste — juste reconnecter
-      folderHandles[existing.id] = subDir;
-      showToast('Dossier retrouve : ' + folderName);
-      openFolder(existing.id);
-      return;
-    }
-
-    // Nouveau — extraire num et client depuis le nom du dossier
-    // Format attendu : NUM_CLIENT (ex: INT-042_Dupont_Jean)
-    var parts = folderName.split('_');
-    var num = parts[0] || folderName;
-    var client = parts.slice(1).join(' ') || 'Inconnu';
-
-    // Compter les photos existantes dans le dossier
-    var photoCount = 0;
-    try {
-      for await (var entry of subDir.values()) {
-        if (entry.kind === 'file') photoCount++;
-      }
-    } catch(e) {}
-
-    var inv = {
-      id: Date.now(),
-      num: num,
-      client: client,
-      date: new Date().toLocaleDateString('fr-FR'),
-      photoCount: photoCount,
-      folderName: folderName
-    };
-
-    interventions.push(inv);
-    folderHandles[inv.id] = subDir;
-    saveData();
-    renderList();
-    showToast('Dossier ouvert : ' + folderName + ' (' + photoCount + ' photo' + (photoCount > 1 ? 's' : '') + ')');
-    openFolder(inv.id);
-  } catch(e) {
-    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
-  }
-}
-
-// ---- Render list ----
 function renderList() {
-  var cont = document.getElementById('list-container');
   var count = interventions.length;
-  var totalPhotos = interventions.reduce(function(a, b){ return a + (b.photoCount || 0); }, 0);
-  var linked = Object.keys(folderHandles).length;
+  var totalPhotos = interventions.reduce(function(a,b){ return a+(b.photoCount||0); }, 0);
+  var linkedCount = interventions.filter(function(i){ return !!folderHandles[i.id]; }).length;
 
-  document.getElementById('hdr-count').textContent = count + ' intervention' + (count > 1 ? 's' : '');
+  document.getElementById('hdr-count').textContent = count + ' intervention' + (count>1?'s':'');
   document.getElementById('s-total').textContent = count;
   document.getElementById('s-photos').textContent = totalPhotos;
-  document.getElementById('s-linked').textContent = linked;
+  document.getElementById('s-linked').textContent = linkedCount;
 
+  var cont = document.getElementById('list-container');
   if (!count) {
-    cont.innerHTML = '<div class="no-photos"><span class="no-photos-icon">&#128193;</span><p>Aucune intervention.<br>Cree-en une !</p></div>';
+    cont.innerHTML = '<div class="empty"><span class="empty-icon">📁</span><p>Aucune intervention.<br>Crée-en une ou ouvre un dossier existant.</p></div>';
     return;
   }
 
-  cont.innerHTML = interventions.slice().reverse().map(function(i) {
+  cont.innerHTML = interventions.slice().reverse().map(function(i){
     var isLinked = !!folderHandles[i.id];
-    return '<div class="card" onclick="openFolder(' + i.id + ')">' +
-      '<div class="card-icon">' + esc(i.num).slice(0,3) + '</div>' +
-      '<div style="flex:1">' +
-        '<div style="font-weight:700">' + esc(i.num) + '</div>' +
-        '<div style="color:var(--muted);font-size:0.8rem">' + esc(i.client) + ' &mdash; ' + i.date + '</div>' +
+    return '<div class="int-card" data-id="' + i.id + '">' +
+      '<div class="card-icon">' + esc(i.num).slice(0,3).toUpperCase() + '</div>' +
+      '<div class="card-body">' +
+        '<div class="card-num">' + esc(i.num) + '</div>' +
+        '<div class="card-name">' + esc(i.client) + '</div>' +
+        '<div class="card-meta">📅 ' + i.date + '</div>' +
       '</div>' +
-      '<div style="display:flex;align-items:center;gap:8px;">' +
-        '<span style="font-family:JetBrains Mono;color:var(--accent);font-weight:800">' + (i.photoCount || 0) + '</span>' +
-        '<span style="font-size:0.7rem;padding:2px 8px;border-radius:20px;' + (isLinked ? 'background:rgba(0,255,136,0.1);color:var(--success)' : 'background:rgba(255,107,43,0.1);color:var(--accent)') + '">' + (isLinked ? 'LIE' : 'NON LIE') + '</span>' +
+      '<div class="card-right">' +
+        '<span class="badge ' + (isLinked?'badge-green':'badge-orange') + '">' + (isLinked?'LIÉ':'NON LIÉ') + '</span>' +
+        '<span class="photo-count">📷 ' + (i.photoCount||0) + '</span>' +
       '</div>' +
     '</div>';
   }).join('');
+
+  document.querySelectorAll('.int-card').forEach(function(card){
+    card.addEventListener('click', function(){ openFolder(parseInt(this.dataset.id)); });
+  });
 }
 
-// ---- Add intervention ----
-async function addIntervention() {
+async function createIntervention() {
   var num = document.getElementById('in-num').value.trim();
   var cli = document.getElementById('in-client').value.trim();
   if (!num || !cli) { showToast('Remplis les deux champs !'); return; }
-
   if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
 
   try {
@@ -283,134 +284,151 @@ async function addIntervention() {
     var folderName = buildFolderName(num, cli);
     var subDir = await parentHandle.getDirectoryHandle(folderName, { create: true });
 
-    var inv = { id: Date.now(), num: num, client: cli, date: new Date().toLocaleDateString('fr-FR'), photoCount: 0, folderName: folderName };
+    var inv = { id: Date.now(), num:num, client:cli, date:new Date().toLocaleDateString('fr-FR'), photoCount:0, folderName:folderName };
     interventions.push(inv);
     folderHandles[inv.id] = subDir;
     saveData();
     renderList();
-    showToast('Dossier cree : ' + folderName);
+    showToast('Dossier créé : ' + folderName);
+    document.getElementById('in-num').value = '';
+    document.getElementById('in-client').value = '';
     openFolder(inv.id);
   } catch(e) {
     if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
   }
 }
 
-// ---- Open folder ----
+async function openExistingFolder() {
+  if (!window.showDirectoryPicker) { showToast('Utilise Chrome Android !'); return; }
+  try {
+    showToast('Choisis le dossier de l\'intervention...');
+    var subDir = await window.showDirectoryPicker({ mode: 'readwrite' });
+    var folderName = subDir.name;
+
+    var existing = interventions.find(function(i){ return i.folderName === folderName; });
+    if (existing) {
+      folderHandles[existing.id] = subDir;
+      showToast('Dossier retrouvé !');
+      renderList();
+      openFolder(existing.id);
+      return;
+    }
+
+    var photoCount = 0;
+    for await (var entry of subDir.values()) {
+      if (entry.kind === 'file') photoCount++;
+    }
+
+    var parts = folderName.split('_');
+    var num = parts[0] || folderName;
+    var client = parts.slice(1).join(' ') || 'Inconnu';
+
+    var inv = { id: Date.now(), num:num, client:client, date:new Date().toLocaleDateString('fr-FR'), photoCount:photoCount, folderName:folderName };
+    interventions.push(inv);
+    folderHandles[inv.id] = subDir;
+    saveData();
+    renderList();
+    showToast('Ouvert : ' + folderName);
+    openFolder(inv.id);
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
+  }
+}
+
 function openFolder(id) {
   currentId = id;
   var inv = interventions.find(function(x){ return x.id === id; });
   if (!inv) return;
-  document.getElementById('d-title').textContent = inv.num;
-  document.getElementById('d-subtitle').textContent = inv.client + ' — ' + inv.date + ' — ' + (inv.folderName || '');
+  document.getElementById('d-num').textContent = inv.num;
+  document.getElementById('d-title').textContent = inv.client;
   document.getElementById('v-list').classList.remove('active');
   document.getElementById('v-detail').classList.add('active');
   renderFolderBanner(inv);
   renderGrid(inv);
 }
 
-// ---- Folder banner ----
 function renderFolderBanner(inv) {
-  var el = document.getElementById('folder-banner-container');
+  var el = document.getElementById('folder-banner');
   var btn = document.getElementById('btn-photo');
   var isLinked = !!folderHandles[inv.id];
 
   if (isLinked) {
     el.innerHTML = '<div class="folder-banner linked">' +
-      '<div class="folder-banner-icon">&#128194;</div>' +
-      '<div class="folder-banner-info"><div class="folder-banner-title">' + esc(inv.folderName) + '</div><div class="folder-banner-sub">Dossier lie &mdash; photos enregistrees directement</div></div>' +
-      '</div>';
+      '<div class="folder-banner-icon">📁</div>' +
+      '<div class="folder-banner-info">' +
+        '<div class="folder-banner-title green">' + esc(inv.folderName) + '</div>' +
+        '<div class="folder-banner-sub">Dossier lié - Enregistrement direct</div>' +
+      '</div></div>';
     btn.disabled = false;
   } else {
     el.innerHTML = '<div class="folder-banner unlinked">' +
-      '<div class="folder-banner-icon">&#128279;</div>' +
-      '<div class="folder-banner-info"><div class="folder-banner-title">Dossier non lie</div><div class="folder-banner-sub">Choisis le dossier parent contenant <strong>' + esc(inv.folderName || inv.num) + '</strong></div></div>' +
-      '<button class="btn btn-green" style="padding:8px 14px;font-size:0.8rem;border-radius:10px;" onclick="reconnectFolder(' + inv.id + ')">Relier</button>' +
-      '</div>';
+      '<div class="folder-banner-icon">🔗</div>' +
+      '<div class="folder-banner-info">' +
+        '<div class="folder-banner-title orange">Dossier non lié</div>' +
+        '<div class="folder-banner-sub">Appuie sur 🔗 pour reconnecter <strong>' + esc(inv.folderName) + '</strong></div>' +
+      '</div></div>';
     btn.disabled = true;
   }
 }
 
-// ---- Reconnect ----
 async function reconnectFolder(id) {
   var inv = interventions.find(function(x){ return x.id === id; });
   if (!inv) return;
   try {
-    showToast('Choisis le dossier parent...');
+    showToast('Choisis le dossier parent contenant "' + inv.folderName + '"...');
     var parentHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
     var subDir = await parentHandle.getDirectoryHandle(inv.folderName, { create: false });
     folderHandles[id] = subDir;
     renderFolderBanner(inv);
     renderList();
-    showToast('Reconnecte : ' + inv.folderName);
+    showToast('Reconnecté : ' + inv.folderName);
   } catch(e) {
-    if (e.name === 'NotFoundError') showToast('Dossier "' + inv.folderName + '" introuvable ici');
+    if (e.name === 'NotFoundError') showToast('Dossier introuvable ici');
     else if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
   }
 }
 
-// ---- Camera ----
-function capturePhoto() {
+function triggerCamera() {
   var inp = document.getElementById('camera-input');
   inp.value = '';
   inp.click();
 }
 
-document.getElementById('camera-input').addEventListener('change', async function(e) {
+async function handlePhotos(e) {
   var files = Array.from(e.target.files);
   if (!files.length || !currentId) return;
-
   var inv = interventions.find(function(x){ return x.id === currentId; });
   var subDir = folderHandles[currentId];
-  if (!subDir) { showToast('Reconnecte le dossier !'); return; }
-
+  if (!subDir) { showToast('Relie le dossier d\'abord !'); return; }
   if (!photoPreviews[currentId]) photoPreviews[currentId] = [];
 
-  var saved = 0, errors = 0;
-
+  var saved = 0;
   for (var idx = 0; idx < files.length; idx++) {
     var file = files[idx];
     try {
-      var nextNum = (inv.photoCount || 0) + idx + 1;
-      var fileName = inv.folderName + '_' + String(nextNum).padStart(3, '0') + '.jpg';
-
-      // Convert to ArrayBuffer (required for Android Chrome)
-      var arrayBuffer = await fileToArrayBuffer(file);
-
-      var fileHandle = await subDir.getFileHandle(fileName, { create: true });
-      var writable = await fileHandle.createWritable();
-      await writable.write(arrayBuffer);
-      await writable.close();
-
-      // Preview in RAM
+      var nextNum = (inv.photoCount || 0) + 1;
+      var fileName = inv.folderName + '_' + String(nextNum).padStart(3,'0') + '.jpg';
+      var fh = await subDir.getFileHandle(fileName, { create: true });
+      var wr = await fh.createWritable();
+      await wr.write(file);
+      await wr.close();
+      
       var url = URL.createObjectURL(file);
       photoPreviews[currentId].push({ name: fileName, url: url });
+      inv.photoCount++;
       saved++;
     } catch(err) {
-      errors++;
       console.error(err);
     }
   }
 
-  inv.photoCount = (inv.photoCount || 0) + saved;
   saveData();
   renderGrid(inv);
   renderList();
   renderFolderBanner(inv);
-
-  if (saved) showToast(saved + ' photo' + (saved > 1 ? 's' : '') + ' enregistree' + (saved > 1 ? 's' : '') + ' !');
-  if (errors) showToast('Erreur sur ' + errors + ' photo(s) — ' + (errors > 0 ? 'reconnecte le dossier' : ''));
-});
-
-function fileToArrayBuffer(file) {
-  return new Promise(function(resolve, reject) {
-    var r = new FileReader();
-    r.onload = function(e){ resolve(e.target.result); };
-    r.onerror = reject;
-    r.readAsArrayBuffer(file);
-  });
+  if (saved) showToast(saved + ' photo(s) enregistrée(s) !');
 }
 
-// ---- Grid ----
 function renderGrid(inv) {
   var grid = document.getElementById('grid');
   var previews = photoPreviews[inv.id] || [];
@@ -418,21 +436,48 @@ function renderGrid(inv) {
 
   if (!previews.length) {
     grid.innerHTML = inv.photoCount > 0
-      ? '<div class="no-photos"><span class="no-photos-icon">&#128194;</span><p>' + inv.photoCount + ' photo(s) dans le dossier.<br><small style="font-size:0.75rem;color:var(--muted)">Apercus disponibles pendant la session.</small></p></div>'
-      : '<div class="no-photos"><span class="no-photos-icon">&#128247;</span><p>Aucune photo.<br>Appuie sur "Prendre une photo".</p></div>';
+      ? '<div class="empty"><p>' + inv.photoCount + ' photos dans le dossier.<br><small>Aperçus disponibles après prise de vue.</small></p></div>'
+      : '<div class="empty"><p>Aucune photo.</p></div>';
     return;
   }
 
-  grid.innerHTML = '<div class="photo-grid">' + previews.map(function(p) {
-    return '<div class="photo-item" onclick="openLightbox(\'' + p.url + '\')">' +
-      '<img src="' + p.url + '" alt="' + esc(p.name) + '"/>' +
+  grid.innerHTML = '<div class="photo-grid">' + previews.map(function(p, idx){
+    return '<div class="photo-item" data-url="' + p.url + '">' +
+      '<img src="' + p.url + '" alt="Photo"/>' +
+      '<span class="photo-num">' + (idx+1) + '</span>' +
     '</div>';
   }).join('') + '</div>';
+
+  document.querySelectorAll('.photo-item').forEach(function(item){
+    item.addEventListener('click', function(){ openLightbox(this.dataset.url); });
+  });
 }
 
-// ---- Delete ----
+async function exportZip() {
+  var inv = interventions.find(function(x){ return x.id === currentId; });
+  if (!inv || !folderHandles[currentId]) { showToast('Relie le dossier d\'abord !'); return; }
+  try {
+    showToast('Choisis le dossier de destination...');
+    var destParent = await window.showDirectoryPicker({ mode: 'readwrite' });
+    var destFolder = await destParent.getDirectoryHandle(inv.folderName, { create: true });
+    var copied = 0;
+    for await (var entry of folderHandles[currentId].values()) {
+      if (entry.kind !== 'file') continue;
+      var srcFile = await entry.getFile();
+      var destFile = await destFolder.getFileHandle(entry.name, { create: true });
+      var wr = await destFile.createWritable();
+      await wr.write(srcFile);
+      await wr.close();
+      copied++;
+    }
+    showToast(copied + ' photos exportées !');
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Erreur : ' + e.message);
+  }
+}
+
 function deleteCurrent() {
-  if (!confirm('Supprimer cette intervention ? (Les photos sur le telephone ne seront pas supprimees)')) return;
+  if (!confirm('Supprimer l\'intervention de la liste ? (Les fichiers restent sur le téléphone)')) return;
   interventions = interventions.filter(function(x){ return x.id !== currentId; });
   delete folderHandles[currentId];
   delete photoPreviews[currentId];
@@ -440,14 +485,16 @@ function deleteCurrent() {
   goHome();
 }
 
-// ---- Home ----
 function goHome() {
   document.getElementById('v-detail').classList.remove('active');
   document.getElementById('v-list').classList.add('active');
   renderList();
 }
 
-function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(str){ 
+  if(!str) return "";
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); 
+}
 </script>
 </body>
 </html>
