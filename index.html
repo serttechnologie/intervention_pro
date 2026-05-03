@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>InterventionPro Ultra</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root {
+  --bg: #05070a; --card: #12161f; --accent: #ff6b2b; --accent-glow: rgba(255,107,43,0.3);
+  --text: #ffffff; --muted: #808ba0; --success: #00ff88; --border: rgba(255,255,255,0.08);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
+
+/* UI ELEMENTS */
+.hdr { position: sticky; top: 0; z-index: 100; background: rgba(5,7,10,0.8); backdrop-filter: blur(15px); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+.logo span { color: var(--accent); }
+
+.view { display: none; padding: 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.btn { border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
+.btn-primary { background: linear-gradient(135deg, var(--accent), #ff9060); color: white; padding: 14px 24px; box-shadow: 0 8px 20px var(--accent-glow); }
+.btn-secondary { background: var(--card); border: 1px solid var(--border); color: white; padding: 12px 20px; }
+.btn-danger { background: rgba(255, 60, 60, 0.15); color: #ff5050; padding: 12px; }
+.btn:active { transform: scale(0.96); opacity: 0.8; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+.stat-card { background: var(--card); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
+.stat-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono'; }
+.stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; }
+.card-icon { width: 45px; height: 45px; background: rgba(255,107,43,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 800; }
+
+.photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.photo-item { aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
+.photo-item img { width: 100%; height: 100%; object-fit: cover; }
+
+/* MODALS */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; padding: 20px; align-items: center; justify-content: center; }
+.modal { background: var(--card); width: 100%; max-width: 450px; border-radius: 24px; padding: 30px; border: 1px solid var(--border); position: relative; }
+.input-group input { width: 100%; padding: 16px; background: #1a1f2b; border: 1px solid var(--border); border-radius: 12px; color: white; margin: 10px 0 20px; font-size: 1rem; }
+
+/* SCANNER LIVE */
+.scan-container { position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 25px; overflow: hidden; background: #000; border: 2px solid var(--accent); }
+#scan-video { width: 100%; height: 100%; object-fit: cover; }
+.scan-mask { position: absolute; inset: 0; box-shadow: 0 0 0 4000px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
+.scan-target { width: 220px; height: 220px; border: 2px solid var(--accent); border-radius: 20px; position: relative; }
+.scan-line { position: absolute; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); animation: scanMove 2s infinite ease-in-out; }
+@keyframes scanMove { 0%, 100% { top: 0% } 50% { top: 100% } }
+
+.scan-tools { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; }
+.flash-btn { width: 50px; height: 50px; border-radius: 25px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 1.2rem; }
+.flash-on { background: var(--accent); color: white; }
+
+#scan-res-banner { display: none; background: var(--success); color: #000; padding: 15px; border-radius: 12px; font-weight: 800; margin-top: 15px; text-align: center; font-family: 'JetBrains Mono'; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">🔧 <span>INTER</span>PRO</div>
+  <button class="btn btn-secondary" onclick="exportZipAll()" style="font-size: 0.8rem">TOUT BACKUP</button>
+</div>
+
+<div class="view active" id="v-list">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h1 style="font-size: 1.5rem">Interventions</h1>
+    <button class="btn btn-primary" onclick="showModal('m-create')">+ Nouveau</button>
+  </div>
+  
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-val" id="s-total">0</span><span class="stat-lbl">Dossiers</span></div>
+    <div class="stat-card"><span class="stat-val" id="s-photos">0</span><span class="stat-lbl">Photos</span></div>
+    <div class="stat-card"><span class="stat-val" id="s-today">0</span><span class="stat-lbl">Aujourd'hui</span></div>
+  </div>
+
+  <div id="list-container"></div>
+</div>
+
+<div class="view" id="v-detail">
+  <div style="display:flex; align-items:center; gap:15px; margin-bottom:25px;">
+    <button class="btn btn-secondary" onclick="goHome()" style="padding: 10px;">←</button>
+    <div style="flex:1">
+      <h2 id="d-title" style="font-size: 1.2rem; margin-bottom:2px">---</h2>
+      <p id="d-subtitle" style="color:var(--muted); font-size:0.8rem">---</p>
+    </div>
+    <button class="btn btn-danger" onclick="deleteCurrent()">🗑</button>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr auto; gap:10px; margin-bottom:25px;">
+    <button class="btn btn-primary" style="width:100%" onclick="capturePhoto()">📸 PRENDRE UNE PHOTO</button>
+    <button class="btn btn-secondary" onclick="exportCurrentZip()">ZIP</button>
+  </div>
+
+  <div class="photo-grid" id="grid"></div>
+</div>
+
+<div class="overlay" id="m-create">
+  <div class="modal">
+    <h3>Nouvelle Intervention</h3>
+    <div class="input-group">
+      <input type="text" id="in-num" placeholder="N° Intervention (ex: 2026-001)">
+      <input type="text" id="in-client" placeholder="Client / Site">
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+      <button class="btn btn-secondary" onclick="hideModals()">ANNULER</button>
+      <button class="btn btn-primary" onclick="addIntervention()">CRÉER</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-scan" style="flex-direction:column;">
+  <div class="scan-container">
+    <video id="scan-video" autoplay muted playsinline></video>
+    <div class="scan-mask">
+      <div class="scan-target"><div class="scan-line"></div></div>
+    </div>
+    <div class="scan-tools">
+      <button class="flash-btn" id="btn-flash" onclick="toggleFlash()">🔦</button>
+    </div>
+  </div>
+  <div id="scan-res-banner"></div>
+  <button class="btn btn-secondary" style="margin-top:20px; width:100%" onclick="stopScanner()">FERMER LE SCANNER</button>
+</div>
+
+<div class="overlay" id="m-light" style="flex-direction:column;">
+  <img id="lb-img" style="max-width:100%; max-height:70vh; border-radius:15px; margin-bottom:20px;">
+  <div style="width:100%; max-width:450px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+    <button class="btn btn-primary" onclick="scanFromImage()">🔍 SCAN PHOTO</button>
+    <button class="btn btn-secondary" onclick="openScanner()">📷 SCAN CAMÉRA</button>
+  </div>
+  <button class="btn btn-danger" style="margin-top:20px" onclick="hideModals()">RETOUR</button>
+</div>
+
+<script>
+let db;
+let interventions = JSON.parse(localStorage.getItem('ipro_data') || '[]');
+let currentId = null;
+let currentStream = null;
+let scanInterval = null;
+let isFlashOn = false;
+
+/* --- INITIALISATION --- */
+const dbReq = indexedDB.open('ipro_db', 1);
+dbReq.onupgradeneeded = e => e.target.result.createObjectStore('photos');
+dbReq.onsuccess = e => { db = e.target.result; renderList(); };
+
+function renderList() {
+    const cont = document.getElementById('list-container');
+    cont.innerHTML = '';
+    document.getElementById('s-total').textContent = interventions.length;
+    document.getElementById('s-photos').textContent = interventions.reduce((a,b)=>a+b.count, 0);
+    
+    interventions.sort((a,b) => b.id - a.id).forEach(inv => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.onclick = () => openFolder(inv.id);
+        div.innerHTML = `
+            <div class="card-icon">${inv.num.slice(0,2)}</div>
+            <div style="flex:1">
+                <div style="font-weight:700">${inv.num}</div>
+                <div style="color:var(--muted); font-size:0.8rem">${inv.client}</div>
+            </div>
+            <div style="color:var(--accent); font-weight:800; font-family:JetBrains Mono">${inv.count}</div>
+        `;
+        cont.appendChild(div);
+    });
+}
+
+/* --- NAVIGATION --- */
+function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+function hideModals() { 
+    document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none');
+    stopScanner();
+}
+function goHome() { document.getElementById('v-detail').classList.remove('active'); document.getElementById('v-list').classList.add('active'); renderList(); }
+
+function addIntervention() {
+    const num = document.getElementById('in-num').value.trim();
+    const cli = document.getElementById('in-client').value.trim();
+    if(!num || !cli) return;
+    const inv = { id: Date.now(), num, client: cli, count: 0 };
+    interventions.push(inv);
+    localStorage.setItem('ipro_data', JSON.stringify(interventions));
+    hideModals(); renderList();
+}
+
+async function openFolder(id) {
+    currentId = id;
+    const inv = interventions.find(x => x.id === id);
+    document.getElementById('d-title').textContent = inv.num;
+    document.getElementById('d-subtitle').textContent = inv.client;
+    document.getElementById('v-list').classList.remove('active');
+    document.getElementById('v-detail').classList.add('active');
+    loadPhotos();
+}
+
+/* --- PHOTOS --- */
+function capturePhoto() {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment';
+    inp.onchange = async () => {
+        const file = inp.files[0];
+        const inv = interventions.find(x => x.id === currentId);
+        const name = `${currentId}_${Date.now()}.jpg`;
+        const tx = db.transaction('photos', 'readwrite');
+        await tx.objectStore('photos').put(file, name);
+        inv.count++;
+        localStorage.setItem('ipro_data', JSON.stringify(interventions));
+        loadPhotos();
+    };
+    inp.click();
+}
+
+async function loadPhotos() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    const tx = db.transaction('photos', 'readonly');
+    const store = tx.objectStore('photos');
+    const req = store.getAllKeys();
+    req.onsuccess = () => {
+        req.result.filter(k => k.startsWith(currentId + '_')).forEach(key => {
+            store.get(key).onsuccess = e => {
+                const url = URL.createObjectURL(e.target.result);
+                const div = document.createElement('div');
+                div.className = 'photo-item';
+                div.onclick = () => { document.getElementById('lb-img').src = url; showModal('m-light'); };
+                div.innerHTML = `<img src="${url}">`;
+                grid.appendChild(div);
+            };
+        });
+    };
+}
+
+/* --- SCANNER MULTI-FORMAT (Barcode + QR) --- */
+async function openScanner() {
+    if (!('BarcodeDetector' in window)) return alert("Scanner non supporté (HTTPS requis)");
+    hideModals();
+    showModal('m-scan');
+    
+    try {
+        currentStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "environment", focusMode: "continuous" } 
+        });
+        document.getElementById('scan-video').srcObject = currentStream;
+        
+        const detector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'code_39', 'ean_13', 'upc_a'] });
+        
+        scanInterval = setInterval(async () => {
+            const barcodes = await detector.detect(document.getElementById('scan-video'));
+            if (barcodes.length > 0) {
+                successScan(barcodes[0].rawValue);
+            }
+        }, 500);
+    } catch (e) { alert("Erreur caméra : " + e); }
+}
+
+function successScan(code) {
+    if (navigator.vibrate) navigator.vibrate(150);
+    const banner = document.getElementById('scan-res-banner');
+    banner.textContent = "DETECTÉ : " + code;
+    banner.style.display = 'block';
+    navigator.clipboard.writeText(code);
+    
+    setTimeout(() => { banner.style.display = 'none'; }, 3000);
+}
+
+async function toggleFlash() {
+    if(!currentStream) return;
+    const track = currentStream.getVideoTracks()[0];
+    isFlashOn = !isFlashOn;
+    try {
+        await track.applyConstraints({ advanced: [{ torch: isFlashOn }] });
+        document.getElementById('btn-flash').classList.toggle('flash-on', isFlashOn);
+    } catch (e) { alert("Flash non supporté"); }
+}
+
+function stopScanner() {
+    clearInterval(scanInterval);
+    if(currentStream) currentStream.getTracks().forEach(t => t.stop());
+    currentStream = null;
+    isFlashOn = false;
+    document.getElementById('m-scan').style.display = 'none';
+}
+
+async function scanFromImage() {
+    const detector = new BarcodeDetector();
+    try {
+        const codes = await detector.detect(document.getElementById('lb-img'));
+        if (codes.length > 0) {
+            const val = codes[0].rawValue;
+            // Copie automatique
+            await navigator.clipboard.writeText(val);
+            alert("Code trouvé et copié : " + val);
+        } else {
+            alert("Aucun code trouvé sur cette photo");
+        }
+    } catch (e) { alert("Erreur : " + e); }
+}
+
+/* --- EXPORTS --- */
+async function exportCurrentZip() {
+    const zip = new JSZip();
+    const inv = interventions.find(x => x.id === currentId);
+    const tx = db.transaction('photos', 'readonly');
+    const store = tx.objectStore('photos');
+    
+    const keys = (await new Promise(r => {
+        const req = store.getAllKeys();
+        req.onsuccess = () => r(req.result.filter(k => k.startsWith(currentId + '_')));
+    }));
+
+    for(let key of keys) {
+        const blob = await new Promise(r => { store.get(key).onsuccess = e => r(e.target.result); });
+        zip.file(key.split('_')[1], blob);
+    }
+
+    const content = await zip.generateAsync({type:"blob"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(content);
+    a.download = `${inv.num}.zip`;
+    a.click();
+}
+
+function deleteCurrent() {
+    if(!confirm("Supprimer l'intervention et les photos ?")) return;
+    const tx = db.transaction('photos', 'readwrite');
+    const store = tx.objectStore('photos');
+    const req = store.getAllKeys();
+    req.onsuccess = () => {
+        req.result.filter(k => k.startsWith(currentId + '_')).forEach(k => store.delete(k));
+        interventions = interventions.filter(x => x.id !== currentId);
+        localStorage.setItem('ipro_data', JSON.stringify(interventions));
+        goHome();
+    };
+}
+</script>
+</body>
+</html>
