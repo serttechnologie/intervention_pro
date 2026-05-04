@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>InterventionPro v6</title>
+<title>InterventionPro v7 - Compatibilité Max</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -13,47 +13,37 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* Header */
 .hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px);
   padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .logo{font-weight:800;font-size:1.15rem;}
 .logo-accent{color:var(--accent);}
 
-/* Layout */
 .view{display:none;padding:20px;max-width:580px;margin:0 auto;}
 .view.active{display:block;}
 
-/* Buttons */
 .btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:0.15s;
   display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
 .btn:active{transform:scale(0.95);}
-.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:14px 22px;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:16px 22px;width:100%;}
 .btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
 .btn-danger{background:rgba(255,80,80,0.15);color:var(--red);padding:10px 14px;}
 
-/* Cards */
 .int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;}
 .card-body{flex:1;min-width:0;}
 .card-num{font-size:0.75rem;font-weight:700;color:var(--accent);}
 
-/* Photo Grid */
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .photo-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card);position:relative;border:1px solid var(--border);}
 .photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
 .photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;width:26px;height:26px;border-radius:50%;z-index:10;font-weight:bold;}
-.barcode-badge{position:absolute;bottom:5px;left:5px;right:5px;background:rgba(0,255,136,0.95);color:#000;
-  font-size:0.6rem;font-weight:800;padding:3px;border-radius:4px;text-align:center;}
 
-/* Lightbox (Affichage plein écran) */
-.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;flex-direction:column;align-items:center;justify-content:center;}
-.lightbox img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:8px;}
-.lb-close{margin-top:20px;padding:15px 30px;background:var(--card);color:white;border-radius:30px;border:1px solid var(--border);}
-
-/* Status Banner */
 .folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:0.85rem;}
 .linked{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);color:var(--green);}
 .unlinked{background:rgba(255,107,43,0.1);border:1px solid rgba(255,107,43,0.2);color:var(--accent);}
+
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;flex-direction:column;align-items:center;justify-content:center;}
+.lightbox img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:8px;}
 
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;}
 .modal{background:var(--card);width:100%;max-width:400px;padding:25px;border-radius:20px;}
@@ -66,16 +56,14 @@ input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid 
   <div class="logo">📸 Inter<span class="logo-accent">Pro</span></div>
 </div>
 
-<!-- LISTE -->
 <div class="view active" id="v-list">
   <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
     <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir dossier</button>
-    <button class="btn btn-primary" id="btn-new">+ Nouveau</button>
+    <button class="btn btn-primary" id="btn-new" style="width:auto">+ Nouveau</button>
   </div>
   <div id="list-container"></div>
 </div>
 
-<!-- DETAIL -->
 <div class="view" id="v-detail">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;">
     <button class="btn btn-secondary" id="btn-back">←</button>
@@ -86,225 +74,182 @@ input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid 
     <button class="btn btn-danger" id="btn-delete">🗑</button>
   </div>
   <div id="folder-banner"></div>
-  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:20px;">
-    <button class="btn btn-primary" id="btn-photo">📸 Prendre Photo</button>
-    <button class="btn btn-secondary" id="btn-reconnect">🔗 Relier</button>
+  
+  <!-- BOUTON PHOTO SIMPLIFIE POUR COMPATIBILITE -->
+  <div style="margin-bottom:20px;">
+    <button class="btn btn-primary" id="btn-photo">📷 PRENDRE UNE PHOTO</button>
+    <button class="btn btn-secondary" id="btn-reconnect" style="margin-top:8px; width:100%;">🔗 Relier le dossier</button>
   </div>
+
   <div id="grid" class="photo-grid"></div>
-  <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none"/>
+  
+  <!-- INPUT CHANGE POUR LE CROSSCALL -->
+  <input type="file" id="camera-input" accept="image/*" style="display:none"/>
 </div>
 
-<!-- MODAL CRÉATION -->
 <div class="overlay" id="m-create">
   <div class="modal">
     <h3>Nouvelle intervention</h3>
-    <input type="text" id="in-num" placeholder="Ex: INT-2024-001"/>
+    <input type="text" id="in-num" placeholder="Numéro intervention"/>
     <input type="text" id="in-client" placeholder="Nom du client"/>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <button class="btn btn-secondary" onclick="hideModals()">Annuler</button>
-      <button class="btn btn-primary" id="btn-modal-create">Créer</button>
+      <button class="btn btn-primary" id="btn-modal-create" style="width:auto">Créer</button>
     </div>
   </div>
 </div>
 
-<!-- LIGHTBOX (AFFICHAGE PHOTO) -->
 <div class="lightbox" id="lightbox">
   <img id="lb-img" src=""/>
-  <button class="lb-close" onclick="closeLightbox()">Fermer</button>
+  <button class="btn btn-secondary" style="margin-top:20px;" onclick="closeLightbox()">Fermer</button>
 </div>
 
 <script>
-let interventions = JSON.parse(localStorage.getItem('ipro_v6') || '[]');
+let interventions = JSON.parse(localStorage.getItem('ipro_v7') || '[]');
 let folderHandles = {}; 
 let currentId = null;
 
-// Rendu liste initiale
 renderList();
 
-// Actions
 document.getElementById('btn-new').onclick = () => showModal('m-create');
 document.getElementById('btn-back').onclick = goHome;
 document.getElementById('btn-modal-create').onclick = createIntervention;
-document.getElementById('btn-photo').onclick = () => document.getElementById('camera-input').click();
-document.getElementById('camera-input').onchange = handlePhoto;
 document.getElementById('btn-reconnect').onclick = () => reconnectFolder(currentId);
 document.getElementById('btn-open-existing').onclick = openExistingFolder;
 document.getElementById('btn-delete').onclick = deleteIntervention;
 
-// --- FONCTIONS PHOTOS ---
+// Gestion simplifiée du clic photo pour le Crosscall
+const camInput = document.getElementById('camera-input');
+document.getElementById('btn-photo').onclick = () => {
+    camInput.click();
+};
 
-async function handlePhoto(e) {
-  const file = e.target.files[0];
-  if(!file || !currentId) return;
-  const handle = folderHandles[currentId];
-  if(!handle) return alert("Reliez d'abord le dossier !");
-
-  const inv = interventions.find(i => i.id === currentId);
-  const fileName = `IMG_${Date.now()}.jpg`;
-  
-  try {
-    const fileHandle = await handle.getFileHandle(fileName, { create: true });
-    const writable = await fileHandle.createWritable();
-    await writable.write(file);
-    await writable.close();
+camInput.onchange = async (e) => {
+    const file = e.target.files[0];
+    if(!file || !currentId) return;
     
-    inv.photoCount++;
-    save();
-    loadPhotos(currentId);
-  } catch(err) { alert("Erreur d'écriture sur le disque."); }
-}
+    const handle = folderHandles[currentId];
+    if(!handle) return alert("Dossier déconnecté. Cliquez sur 'Relier le dossier'.");
+
+    try {
+        const fileName = `IMG_${Date.now()}.jpg`;
+        const fileHandle = await handle.getFileHandle(fileName, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(file);
+        await writable.close();
+        
+        const inv = interventions.find(i => i.id === currentId);
+        inv.photoCount++;
+        save();
+        loadPhotos(currentId);
+    } catch(err) {
+        alert("Erreur : Le Crosscall bloque l'écriture. Essayez de 'Relier' à nouveau.");
+    }
+};
 
 async function loadPhotos(id) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  const handle = folderHandles[id];
-  if(!handle) return;
-
-  for await (const entry of handle.values()) {
-    if(entry.kind === 'file') {
-      const file = await entry.getFile();
-      const url = URL.createObjectURL(file);
-      
-      const div = document.createElement('div');
-      div.className = 'photo-item';
-      
-      const img = document.createElement('img');
-      img.src = url;
-      img.onclick = () => openLightbox(url); // CLIC POUR AGRANDIR
-      
-      const delBtn = document.createElement('button');
-      delBtn.className = 'photo-del';
-      delBtn.innerHTML = '✕';
-      delBtn.onclick = (e) => { e.stopPropagation(); deletePhoto(entry.name); };
-      
-      div.appendChild(img);
-      div.appendChild(delBtn);
-
-      // Scan Code barre
-      if ('BarcodeDetector' in window) {
-        const detector = new BarcodeDetector();
-        detector.detect(img).then(codes => {
-          if (codes.length > 0) {
-            const badge = document.createElement('div');
-            badge.className = 'barcode-badge';
-            badge.textContent = codes[0].rawValue;
-            div.appendChild(badge);
-          }
-        }).catch(()=>{});
-      }
-      
-      grid.appendChild(div);
-    }
-  }
-}
-
-function openLightbox(url) {
-  document.getElementById('lb-img').src = url;
-  document.getElementById('lightbox').style.display = 'flex';
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox').style.display = 'none';
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    const handle = folderHandles[id];
+    if(!handle) return;
+    try {
+        for await (const entry of handle.values()) {
+            if(entry.kind === 'file') {
+                const file = await entry.getFile();
+                const url = URL.createObjectURL(file);
+                const div = document.createElement('div');
+                div.className = 'photo-item';
+                div.innerHTML = `<img src="${url}" onclick="openLightbox('${url}')">
+                                 <button class="photo-del" onclick="event.stopPropagation(); deletePhoto('${entry.name}')">✕</button>`;
+                grid.appendChild(div);
+            }
+        }
+    } catch(e) {}
 }
 
 async function deletePhoto(name) {
-  if(!confirm("Supprimer définitivement ce fichier ?")) return;
-  await folderHandles[currentId].removeEntry(name);
-  const inv = interventions.find(i => i.id === currentId);
-  inv.photoCount = Math.max(0, inv.photoCount - 1);
-  save();
-  loadPhotos(currentId);
+    if(!confirm("Supprimer ?")) return;
+    await folderHandles[currentId].removeEntry(name);
+    const inv = interventions.find(i => i.id === currentId);
+    inv.photoCount = Math.max(0, inv.photoCount - 1);
+    save(); loadPhotos(currentId);
 }
 
-// --- GESTION DOSSIERS ---
-
+// --- DOSSIERS ---
 async function createIntervention() {
-  const num = document.getElementById('in-num').value.trim();
-  const cli = document.getElementById('in-client').value.trim();
-  if(!num || !cli) return;
-  try {
-    const parent = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const name = `${num}_${cli}`.replace(/[^a-z0-9_]/gi, '_');
-    const handle = await parent.getDirectoryHandle(name, { create: true });
-    const inv = { id: Date.now(), num, client: cli, folderName: name, photoCount: 0 };
-    interventions.push(inv);
-    folderHandles[inv.id] = handle;
-    save(); hideModals(); renderList(); openFolder(inv.id);
-  } catch(e) {}
+    const num = document.getElementById('in-num').value.trim();
+    const cli = document.getElementById('in-client').value.trim();
+    if(!num || !cli) return;
+    try {
+        const parent = await window.showDirectoryPicker({ mode: 'readwrite' });
+        const name = `${num}_${cli}`.replace(/[^a-z0-9_]/gi, '_');
+        const handle = await parent.getDirectoryHandle(name, { create: true });
+        const inv = { id: Date.now(), num, client: cli, folderName: name, photoCount: 0 };
+        interventions.push(inv);
+        folderHandles[inv.id] = handle;
+        save(); hideModals(); renderList(); openFolder(inv.id);
+    } catch(e) { alert("Le Crosscall ne supporte pas la gestion de dossiers Chrome."); }
 }
 
 async function openExistingFolder() {
-  try {
-    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    let inv = interventions.find(i => i.folderName === handle.name);
-    if(!inv) {
-      inv = { id: Date.now(), num: handle.name.split('_')[0], client: handle.name.split('_')[1] || 'Client', folderName: handle.name, photoCount: 0 };
-      interventions.push(inv);
-    }
-    folderHandles[inv.id] = handle;
-    save(); renderList(); openFolder(inv.id);
-  } catch(e) {}
+    try {
+        const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        let inv = interventions.find(i => i.folderName === handle.name);
+        if(!inv) {
+            inv = { id: Date.now(), num: handle.name.split('_')[0], client: handle.name.split('_')[1] || 'Client', folderName: handle.name, photoCount: 0 };
+            interventions.push(inv);
+        }
+        folderHandles[inv.id] = handle;
+        save(); renderList(); openFolder(inv.id);
+    } catch(e) {}
 }
 
 async function reconnectFolder(id) {
-  try {
-    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const inv = interventions.find(i => i.id === id);
-    if(handle.name !== inv.folderName) return alert("Ce n'est pas le bon dossier !");
-    folderHandles[id] = handle;
-    renderFolderBanner(inv);
-    loadPhotos(id);
-  } catch(e) {}
+    try {
+        const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        folderHandles[id] = handle;
+        renderFolderBanner(interventions.find(i => i.id === id));
+        loadPhotos(id);
+    } catch(e) {}
 }
 
-// --- UI / NAVIGATION ---
-
 function renderList() {
-  const container = document.getElementById('list-container');
-  container.innerHTML = '';
-  interventions.slice().reverse().forEach(inv => {
-    const div = document.createElement('div');
-    div.className = 'int-card';
-    div.onclick = () => openFolder(inv.id);
-    div.innerHTML = `<div class="card-body"><div class="card-num">${inv.num}</div><div class="card-name">${inv.client}</div></div><div style="font-weight:800">${inv.photoCount} 📷</div>`;
-    container.appendChild(div);
-  });
+    const container = document.getElementById('list-container');
+    container.innerHTML = '';
+    interventions.slice().reverse().forEach(inv => {
+        const div = document.createElement('div');
+        div.className = 'int-card';
+        div.onclick = () => openFolder(inv.id);
+        div.innerHTML = `<div class="card-body"><div class="card-num">${inv.num}</div><div class="card-name">${inv.client}</div></div><div>${inv.photoCount} 📷</div>`;
+        container.appendChild(div);
+    });
 }
 
 function openFolder(id) {
-  currentId = id;
-  const inv = interventions.find(i => i.id === id);
-  document.getElementById('d-num').textContent = inv.num;
-  document.getElementById('d-title').textContent = inv.client;
-  document.getElementById('v-list').classList.remove('active');
-  document.getElementById('v-detail').classList.add('active');
-  renderFolderBanner(inv);
-  loadPhotos(id);
+    currentId = id;
+    const inv = interventions.find(i => i.id === id);
+    document.getElementById('d-num').textContent = inv.num;
+    document.getElementById('d-title').textContent = inv.client;
+    document.getElementById('v-list').classList.remove('active');
+    document.getElementById('v-detail').classList.add('active');
+    renderFolderBanner(inv);
+    loadPhotos(id);
 }
 
 function renderFolderBanner(inv) {
-  const b = document.getElementById('folder-banner');
-  const linked = !!folderHandles[inv.id];
-  b.className = 'folder-banner ' + (linked ? 'linked' : 'unlinked');
-  b.innerHTML = linked ? `✅ Dossier relié` : `⚠️ Déconnecté (Appuyez sur Relier)`;
+    const b = document.getElementById('folder-banner');
+    const linked = !!folderHandles[inv.id];
+    b.className = 'folder-banner ' + (linked ? 'linked' : 'unlinked');
+    b.innerHTML = linked ? `✅ Dossier prêt` : `⚠️ Appuyez sur "Relier le dossier"`;
 }
 
-function goHome() {
-  currentId = null;
-  document.getElementById('v-detail').classList.remove('active');
-  document.getElementById('v-list').classList.add('active');
-  renderList();
-}
-
-function deleteIntervention() {
-  if(!confirm("Supprimer de l'application ?")) return;
-  interventions = interventions.filter(i => i.id !== currentId);
-  save(); goHome();
-}
-
-function save() { localStorage.setItem('ipro_v6', JSON.stringify(interventions)); }
+function goHome() { currentId = null; document.getElementById('v-detail').classList.remove('active'); document.getElementById('v-list').classList.add('active'); renderList(); }
+function deleteIntervention() { if(confirm("Supprimer ?")) { interventions = interventions.filter(i => i.id !== currentId); save(); goHome(); } }
+function save() { localStorage.setItem('ipro_v7', JSON.stringify(interventions)); }
 function showModal(id) { document.getElementById(id).style.display = 'flex'; }
 function hideModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); }
+function openLightbox(url) { document.getElementById('lb-img').src = url; document.getElementById('lightbox').style.display = 'flex'; }
+function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 </script>
 </body>
 </html>
