@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>InterventionPro v7.1 - Corrigé</title>
+  <title>InterventionPro v8.1</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -13,132 +13,237 @@
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-   .hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px); padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-   .logo{font-weight:800;font-size:1.15rem;}
-   .logo-accent{color:var(--accent);}
-   .view{display:none;padding:20px;max-width:580px;margin:0 auto;}
-   .view.active{display:block;}
-   .btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:0.15s; display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
-   .btn:active{transform:scale(0.95);}
-   .btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:16px 22px;width:100%;}
-   .btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
-   .btn-danger{background:rgba(255,80,80,0.15);color:var(--red);padding:10px 14px;}
-   .int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;}
-   .card-body{flex:1;min-width:0;}
-   .card-num{font-size:0.75rem;font-weight:700;color:var(--accent);}
-   .card-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-   .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-   .photo-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card);position:relative;border:1px solid var(--border);}
-   .photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
-   .photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;width:26px;height:26px;border-radius:50%;z-index:10;font-weight:bold;}
-   .folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:0.85rem;}
-   .linked{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);color:var(--green);}
-   .unlinked{background:rgba(255,107,43,0.1);border:1px solid rgba(255,107,43,0.2);color:var(--accent);}
-   .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;flex-direction:column;align-items:center;justify-content:center;}
-   .lightbox img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:8px;}
-   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;}
-   .modal{background:var(--card);width:100%;max-width:400px;padding:25px;border-radius:20px;}
+    .hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px); padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .logo{font-weight:800;font-size:1.15rem;}
+    .logo-accent{color:var(--accent);}
+    .view{display:none;padding:20px;max-width:580px;margin:0 auto;}
+    .view.active{display:block;}
+    .btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:0.15s; display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
+    .btn:active{transform:scale(0.95);}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:16px 22px;width:100%;}
+    .btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
+    .btn-danger{background:rgba(255,80,80,0.15);color:var(--red);padding:10px 14px;}
+    .int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;}
+    .card-body{flex:1;min-width:0;}
+    .card-num{font-size:0.75rem;font-weight:700;color:var(--muted);}
+    .card-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:1.1rem;}
+    .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .photo-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card);position:relative;border:1px solid var(--border);}
+    .photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
+    .photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;width:26px;height:26px;border-radius:50%;z-index:10;font-weight:bold;}
+    .folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:0.85rem;}
+    .linked{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);color:var(--green);}
+    .unlinked{background:rgba(255,107,43,0.1);border:1px solid rgba(255,107,43,0.2);color:var(--accent);}
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;flex-direction:column;align-items:center;justify-content:center;}
+    .lightbox img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:8px;}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+    .modal{background:var(--card);width:100%;max-width:400px;padding:25px;border-radius:20px;}
     input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid var(--border);color:#fff;border-radius:10px;}
+    
+    /* Styles pour la vue Info */
+    .info-box {background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:15px;}
+    .info-box h4 {color:var(--accent); margin-bottom:8px; font-size:1.05rem;}
+    .info-box p, .info-box ul {color:var(--muted); font-size:0.9rem; line-height:1.4;}
+    .info-box ul {margin-left:20px; margin-top:5px;}
+    .info-box code {background:#1a1f2b; padding:2px 6px; border-radius:4px; color:#fff; font-family:monospace;}
   </style>
 </head>
 <body>
+
   <div class="hdr">
     <div class="logo">📸 Inter<span class="logo-accent">Pro</span></div>
+    <!-- Nouveau bouton d'accès au guide Mémo -->
+    <button class="btn btn-secondary" id="btn-info" style="padding:8px 14px; font-size:0.85rem;">❓ Guide / Info</button>
   </div>
+
+  <!-- VUE 1 : LISTE DES INTERVENTIONS -->
   <div class="view active" id="v-list">
     <div style="display:flex;justify-content:space-between;margin-bottom:20px;gap:10px;">
-      <button class="btn btn-secondary" id="btn-open-existing">📁 Ouvrir dossier</button>
-      <button class="btn btn-primary" id="btn-new" style="width:auto">+ Nouveau</button>
+      <div id="root-status" style="font-size:0.85rem; display:flex; align-items:center; color:var(--muted)">Configuration du stockage...</div>
+      <button class="btn btn-primary" id="btn-new" style="width:auto">+ Nouvelle Intervention</button>
     </div>
     <div id="list-container"></div>
   </div>
+
+  <!-- VUE 2 : DETAIL D'UNE INTERVENTION -->
   <div class="view" id="v-detail">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;">
       <button class="btn btn-secondary" id="btn-back">←</button>
       <div style="flex:1;">
-        <div id="d-num" style="color:var(--accent);font-weight:700;font-size:0.7rem;"></div>
-        <div id="d-title" style="font-weight:800;font-size:1rem;"></div>
+        <div id="d-num" style="color:var(--muted);font-weight:700;font-size:0.75rem;"></div>
+        <div id="d-title" style="font-weight:800;font-size:1.2rem;"></div>
       </div>
       <button class="btn btn-danger" id="btn-delete">🗑</button>
     </div>
     <div id="folder-banner"></div>
     <div style="margin-bottom:20px;">
       <button class="btn btn-primary" id="btn-photo">📷 PRENDRE UNE PHOTO</button>
-      <button class="btn btn-secondary" id="btn-reconnect" style="margin-top:8px; width:100%;">🔗 Relier le dossier</button>
     </div>
     <div id="grid" class="photo-grid"></div>
     <input type="file" id="camera-input" accept="image/jpeg,image/png" capture="environment" style="display:none"/>
   </div>
+
+  <!-- VUE 3 : ONGLET INFO / RÉSUMÉ MÉMOIRE -->
+  <div class="view" id="v-info">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <button class="btn btn-secondary" id="btn-info-back">← Retour</button>
+      <h2>Guide de fonctionnement</h2>
+    </div>
+
+    <div class="info-box">
+      <h4>📂 Où sont mes fichiers ?</h4>
+      <p>Tout est enregistré <strong>en local sur votre appareil</strong>. Lors du premier lancement ou après une longue absence, l'application vous demande de cibler un emplacement. Elle y crée automatiquement le dossier principal : <code>InterventionPro_Data</code>.</p>
+    </div>
+
+    <div class="info-box">
+      <h4>🏷️ Organisation Automatique</h4>
+      <p>Pour chaque intervention, vous ne tapez qu'un <strong>Titre</strong>. L'application génère automatiquement un sous-dossier normé avec la date et l'heure courante :</p>
+      <p style="margin-top:8px; font-weight:bold; color:#fff;">Format : <code>[Titre]_[ANNÉE]-[MOIS]-[JOUR]_[HEURE]-[MINUTES]</code></p>
+      <p style="font-size:0.8rem; margin-top:4px;">Exemple : <code>Installation_Clim_2026-07-19_13-15</code></p>
+    </div>
+
+    <div class="info-box">
+      <h4>🔒 Longue période sans utilisation ?</h4>
+      <p>Les navigateurs internet (Chrome, Edge) coupent l'accès aux fichiers locaux par sécurité si vous n'avez pas ouvert l'application depuis longtemps.</p>
+      <p style="margin-top:8px;"><strong>Que faire ?</strong> Cliquez simplement sur "Nouvelle Intervention" ou ouvrez-en une existante : le navigateur vous demandera de re-confirmer l'accès à votre dossier de base. Une fois validé, toutes vos anciennes photos réapparaîtront instantanément.</p>
+    </div>
+
+    <div class="info-box">
+      <h4>⚠️ Précautions importantes</h4>
+      <ul>
+        <li>N'effacez pas le cache ou l'historique lourd de votre navigateur sous peine de perdre la liste visible à l'écran (les dossiers physiques restent sains sur le disque).</li>
+        <li>Si vous supprimez une intervention depuis le bouton poubelle 🗑, elle disparaît de l'application mais <strong>les photos restent en sécurité sur votre appareil</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MODAL DE CRÉATION -->
   <div class="overlay" id="m-create">
     <div class="modal">
       <h3>Nouvelle intervention</h3>
-      <input type="text" id="in-num" placeholder="Numéro intervention"/>
-      <input type="text" id="in-client" placeholder="Nom du client"/>
+      <input type="text" id="in-title" placeholder="Titre de l'intervention"/>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <button class="btn btn-secondary" onclick="hideModals()">Annuler</button>
         <button class="btn btn-primary" id="btn-modal-create" style="width:auto">Créer</button>
       </div>
     </div>
+  </div>
+
+  <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
     <img id="lb-img" src=""/>
     <button class="btn btn-secondary" style="margin-top:20px;" onclick="closeLightbox()">Fermer</button>
   </div>
+
 <script>
 const hasFileSystem = 'showDirectoryPicker' in window;
-let interventions = JSON.parse(localStorage.getItem('ipro_v7') || '[]');
-let folderHandles = {};
+let interventions = JSON.parse(localStorage.getItem('ipro_v8') || '[]');
+let rootHandle = null; 
+let currentFolderHandle = null; 
 let currentId = null;
-let objectURLs = []; // Pour éviter les memory leaks
+let objectURLs = [];
+
 if (!hasFileSystem) {
-  alert("Ton navigateur ne supporte pas la gestion de dossiers. Utilise Chrome/Edge sur Android ou PC.");
+  alert("Ton navigateur ne supporte pas la gestion de dossiers locaux. Utilise Chrome/Edge sur Android ou PC.");
 }
+
+updateRootStatus();
 renderList();
-document.getElementById('btn-new').onclick = () => showModal('m-create');
+
+// Navigation & Evénements
+document.getElementById('btn-new').onclick = async () => {
+  if (!await verifyRootHandle()) return;
+  showModal('m-create');
+  document.getElementById('in-title').focus();
+};
 document.getElementById('btn-back').onclick = goHome;
 document.getElementById('btn-modal-create').onclick = createIntervention;
-document.getElementById('btn-reconnect').onclick = () => reconnectFolder(currentId);
-document.getElementById('btn-open-existing').onclick = openExistingFolder;
 document.getElementById('btn-delete').onclick = deleteIntervention;
+
+// Événements pour le nouvel onglet info
+document.getElementById('btn-info').onclick = openInfoView;
+document.getElementById('btn-info-back').onclick = closeInfoView;
+
 const camInput = document.getElementById('camera-input');
-document.getElementById('btn-photo').onclick = () => {
-  if (!hasFileSystem) return alert("Fonction non supportée sur ce navigateur.");
-  if (!folderHandles[currentId]) return alert("Dossier déconnecté. Clique sur 'Relier le dossier'.");
+document.getElementById('btn-photo').onclick = async () => {
+  if (!currentFolderHandle) {
+    if (!await verifyRootHandle()) return;
+    const inv = interventions.find(i => i.id === currentId);
+    try {
+      currentFolderHandle = await rootHandle.getDirectoryHandle(inv.folderName, { create: false });
+    } catch(e) {
+      return alert("Impossible d'accéder au dossier local de cette intervention.");
+    }
+  }
   camInput.click();
 };
+
 camInput.onchange = async (e) => {
   const file = e.target.files[0];
-  if(!file ||!currentId) return;
-  const handle = folderHandles[currentId];
+  if(!file || !currentId || !currentFolderHandle) return;
   try {
     const fileName = `IMG_${Date.now()}.jpg`;
-    const fileHandle = await handle.getFileHandle(fileName, { create: true });
+    const fileHandle = await currentFolderHandle.getFileHandle(fileName, { create: true });
     const writable = await fileHandle.createWritable();
     await writable.write(file);
     await writable.close();
+    
     const inv = interventions.find(i => i.id === currentId);
     inv.photoCount++;
     save();
-    await loadPhotos(currentId);
+    await loadPhotos();
   } catch(err) {
     console.error(err);
-    alert("Erreur d'écriture. Vérifie les permissions du dossier.");
+    alert("Erreur d'écriture dans le dossier local.");
   } finally {
-    e.target.value = ''; // Reset pour pouvoir reprendre la même photo
+    e.target.value = '';
   }
 };
+
+function updateRootStatus() {
+  const status = document.getElementById('root-status');
+  if (rootHandle) {
+    status.innerHTML = `📁 Stockage local actif`;
+    status.style.color = "var(--green)";
+  } else {
+    status.innerHTML = `⚠️ Stockage non relié`;
+    status.style.color = "var(--accent)";
+  }
+}
+
+async function verifyRootHandle() {
+  if (rootHandle) {
+    const options = { mode: 'readwrite' };
+    if ((await rootHandle.queryPermission(options)) === 'granted') return true;
+    if ((await rootHandle.requestPermission(options)) === 'granted') return true;
+    return false;
+  }
+  
+  try {
+    alert("Veuillez sélectionner un dossier sur votre appareil. L'application y créera automatiquement son dossier de stockage local 'InterventionPro_Data'.");
+    const baseHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    rootHandle = await baseHandle.getDirectoryHandle('InterventionPro_Data', { create: true });
+    updateRootStatus();
+    return true;
+  } catch (e) {
+    if (e.name !== 'AbortError') alert("Erreur d'accès au stockage : " + e.message);
+    return false;
+  }
+}
+
 function escapeHTML(str) {
   return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
-async function loadPhotos(id) {
+
+async function loadPhotos() {
   const grid = document.getElementById('grid');
-  // Clean old URLs pour éviter memory leak
   objectURLs.forEach(URL.revokeObjectURL);
   objectURLs = [];
   grid.innerHTML = '';
-  const handle = folderHandles[id];
-  if(!handle) return;
+  
+  if(!currentFolderHandle) return;
   try {
-    for await (const entry of handle.values()) {
+    for await (const entry of currentFolderHandle.values()) {
       if(entry.kind === 'file' && entry.name.match(/\.(jpg|jpeg|png)$/i)) {
         const file = await entry.getFile();
         const url = URL.createObjectURL(file);
@@ -156,75 +261,56 @@ async function loadPhotos(id) {
     console.error("Erreur lecture dossier:", e);
   }
 }
+
 async function deletePhoto(name) {
-  if(!confirm("Supprimer cette photo?")) return;
+  if(!confirm("Supprimer cette photo définitivement du dossier local ?")) return;
   try {
-    await folderHandles[currentId].removeEntry(name);
+    await currentFolderHandle.removeEntry(name);
     const inv = interventions.find(i => i.id === currentId);
     inv.photoCount = Math.max(0, inv.photoCount - 1);
     save();
-    await loadPhotos(currentId);
+    await loadPhotos();
   } catch(e) {
-    alert("Impossible de supprimer la photo.");
+    alert("Impossible de supprimer le fichier.");
   }
 }
+
 async function createIntervention() {
-  if (!hasFileSystem) return alert("Navigateur non compatible.");
-  const num = document.getElementById('in-num').value.trim();
-  const cli = document.getElementById('in-client').value.trim();
-  if(!num ||!cli) return alert("Remplis numéro et client.");
+  const title = document.getElementById('in-title').value.trim();
+  if(!title) return alert("Veuillez saisir un titre.");
+  
   try {
-    const parent = await window.showDirectoryPicker({ mode: 'readwrite' });
-    const name = `${num}_${cli}`.replace(/[^a-z0-9_]/gi, '_');
-    const handle = await parent.getDirectoryHandle(name, { create: true });
-    const inv = { id: Date.now(), num, client: cli, folderName: name, photoCount: 0 };
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}`;
+    
+    const cleanTitle = title.replace(/[^a-zA-Z0-9-_ ]/g, '').trim().replace(/\s+/g, '_');
+    const folderName = `${cleanTitle}_${dateStr}`;
+    
+    currentFolderHandle = await rootHandle.getDirectoryHandle(folderName, { create: true });
+    
+    const dateAffichage = `${pad(now.getDate())}/${pad(now.getMonth()+1)} à ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const inv = { 
+      id: Date.now(), 
+      title: title, 
+      dateInfo: dateAffichage,
+      folderName: folderName, 
+      photoCount: 0 
+    };
+    
     interventions.push(inv);
-    folderHandles[inv.id] = handle;
+    currentId = inv.id;
     save();
     hideModals();
-    document.getElementById('in-num').value = '';
-    document.getElementById('in-client').value = '';
+    document.getElementById('in-title').value = '';
+    
     renderList();
     openFolder(inv.id);
   } catch(e) {
-    if (e.name!== 'AbortError') alert("Erreur : " + e.message);
+    alert("Erreur lors de la création automatique du dossier : " + e.message);
   }
 }
-async function openExistingFolder() {
-  if (!hasFileSystem) return alert("Navigateur non compatible.");
-  try {
-    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    let inv = interventions.find(i => i.folderName === handle.name);
-    if(!inv) {
-      const parts = handle.name.split('_');
-      inv = {
-        id: Date.now(),
-        num: parts[0] || 'INCONNU',
-        client: parts[1] || 'Client',
-        folderName: handle.name,
-        photoCount: 0
-      };
-      interventions.push(inv);
-    }
-    folderHandles[inv.id] = handle;
-    save();
-    renderList();
-    openFolder(inv.id);
-  } catch(e) {
-    if (e.name!== 'AbortError') console.error(e);
-  }
-}
-async function reconnectFolder(id) {
-  if (!hasFileSystem) return alert("Navigateur non compatible.");
-  try {
-    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    folderHandles[id] = handle;
-    renderFolderBanner(interventions.find(i => i.id === id));
-    await loadPhotos(id);
-  } catch(e) {
-    if (e.name!== 'AbortError') console.error(e);
-  }
-}
+
 function renderList() {
   const container = document.getElementById('list-container');
   container.innerHTML = '';
@@ -234,46 +320,75 @@ function renderList() {
     div.onclick = () => openFolder(inv.id);
     div.innerHTML = `
       <div class="card-body">
-        <div class="card-num">${escapeHTML(inv.num)}</div>
-        <div class="card-name">${escapeHTML(inv.client)}</div>
+        <div class="card-name">${escapeHTML(inv.title)}</div>
+        <div class="card-num">Créé le ${escapeHTML(inv.dateInfo)}</div>
       </div>
       <div>${inv.photoCount} 📷</div>`;
     container.appendChild(div);
   });
 }
-function openFolder(id) {
+
+async function openFolder(id) {
   currentId = id;
   const inv = interventions.find(i => i.id === id);
-  document.getElementById('d-num').textContent = inv.num;
-  document.getElementById('d-title').textContent = inv.client;
+  document.getElementById('d-num').textContent = `Créé le ${inv.dateInfo}`;
+  document.getElementById('d-title').textContent = inv.title;
+  
   document.getElementById('v-list').classList.remove('active');
+  document.getElementById('v-info').classList.remove('active'); // Sécurité
   document.getElementById('v-detail').classList.add('active');
+  
+  if (rootHandle) {
+    try {
+      currentFolderHandle = await rootHandle.getDirectoryHandle(inv.folderName, { create: false });
+    } catch(e) {
+      currentFolderHandle = null;
+    }
+  }
+  
   renderFolderBanner(inv);
-  loadPhotos(id);
+  if (currentFolderHandle) loadPhotos();
 }
+
 function renderFolderBanner(inv) {
   const b = document.getElementById('folder-banner');
-  const linked =!!folderHandles[inv.id];
-  b.className = 'folder-banner ' + (linked? 'linked' : 'unlinked');
-  b.innerHTML = linked? `✅ Dossier prêt : ${escapeHTML(inv.folderName)}` : `⚠️ Appuyez sur "Relier le dossier"`;
+  const linked = !!currentFolderHandle;
+  b.className = 'folder-banner ' + (linked ? 'linked' : 'unlinked');
+  b.innerHTML = linked ? `✅ Enregistré automatiquement dans : InterventionPro_Data/${escapeHTML(inv.folderName)}` : `⚠️ Liaison racine perdue. Créez ou ouvrez un élément pour réactiver l'accès.`;
 }
+
 function goHome() {
   currentId = null;
+  currentFolderHandle = null;
   objectURLs.forEach(URL.revokeObjectURL);
   objectURLs = [];
   document.getElementById('v-detail').classList.remove('active');
+  document.getElementById('v-info').classList.remove('active');
   document.getElementById('v-list').classList.add('active');
   renderList();
 }
-function deleteIntervention() {
-  if(confirm("Supprimer cette intervention? Les photos resteront dans le dossier.")) {
-    interventions = interventions.filter(i => i.id!== currentId);
-    delete folderHandles[currentId];
+
+// Logique pour l'affichage de l'onglet Info
+function openInfoView() {
+  document.getElementById('v-list').classList.remove('active');
+  document.getElementById('v-detail').classList.remove('active');
+  document.getElementById('v-info').classList.add('active');
+}
+
+function closeInfoView() {
+  document.getElementById('v-info').classList.remove('active');
+  document.getElementById('v-list').classList.add('active');
+}
+
+async function deleteIntervention() {
+  if(confirm("Supprimer cette intervention de l'application ?\n(Note : Par sécurité, son dossier local et ses photos ne seront pas effacés du disque)")) {
+    interventions = interventions.filter(i => i.id !== currentId);
     save();
     goHome();
   }
 }
-function save() { localStorage.setItem('ipro_v7', JSON.stringify(interventions)); }
+
+function save() { localStorage.setItem('ipro_v8', JSON.stringify(interventions)); }
 function showModal(id) { document.getElementById(id).style.display = 'flex'; }
 function hideModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); }
 function openLightbox(url) {
