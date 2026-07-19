@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>InterventionPro v8.1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>InterventionPro v8.2 - Mobile</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -12,57 +12,72 @@
       --border:rgba(255,255,255,0.08); --radius:16px;
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh; padding-bottom: 90px;} /* Espace pour ne pas cacher le contenu sous les boutons du bas */
+    
     .hdr{position:sticky;top:0;z-index:100;background:rgba(5,7,10,0.85);backdrop-filter:blur(16px); padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
     .logo{font-weight:800;font-size:1.15rem;}
     .logo-accent{color:var(--accent);}
+    
     .view{display:none;padding:20px;max-width:580px;margin:0 auto;}
     .view.active{display:block;}
+    
     .btn{border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:0.15s; display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
     .btn:active{transform:scale(0.95);}
     .btn-primary{background:linear-gradient(135deg,var(--accent),#ff9060);color:#fff;padding:16px 22px;width:100%;}
     .btn-secondary{background:var(--card);border:1px solid var(--border);color:#fff;padding:12px 18px;}
     .btn-danger{background:rgba(255,80,80,0.15);color:var(--red);padding:10px 14px;}
+    
+    /* Zone des boutons d'actions persistants en bas pour le pouce */
+    .bottom-action-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; 
+      padding: 16px 20px; z-index: 99;
+      background: linear-gradient(to top, var(--bg) 80%, transparent);
+      max-width: 580px; margin: 0 auto;
+    }
+    
     .int-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;}
     .card-body{flex:1;min-width:0;}
     .card-num{font-size:0.75rem;font-weight:700;color:var(--muted);}
     .card-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:1.1rem;}
-    .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    
+    .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px; padding-bottom: 20px;}
     .photo-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--card);position:relative;border:1px solid var(--border);}
     .photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
     .photo-del{position:absolute;top:5px;right:5px;background:var(--red);color:white;border:none;width:26px;height:26px;border-radius:50%;z-index:10;font-weight:bold;}
+    
     .folder-banner{border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:0.85rem;}
     .linked{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);color:var(--green);}
     .unlinked{background:rgba(255,107,43,0.1);border:1px solid rgba(255,107,43,0.2);color:var(--accent);}
+    
     .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;flex-direction:column;align-items:center;justify-content:center;}
     .lightbox img{max-width:95vw;max-height:80vh;object-fit:contain;border-radius:8px;}
+    
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;}
     .modal{background:var(--card);width:100%;max-width:400px;padding:25px;border-radius:20px;}
-    input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid var(--border);color:#fff;border-radius:10px;}
+    input{width:100%;padding:12px;margin:10px 0;background:#1a1f2b;border:1px solid var(--border);color:#fff;border-radius:10px; font-size:1rem;}
     
-    /* Styles pour la vue Info */
     .info-box {background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:15px;}
     .info-box h4 {color:var(--accent); margin-bottom:8px; font-size:1.05rem;}
     .info-box p, .info-box ul {color:var(--muted); font-size:0.9rem; line-height:1.4;}
     .info-box ul {margin-left:20px; margin-top:5px;}
-    .info-box code {background:#1a1f2b; padding:2px 6px; border-radius:4px; color:#fff; font-family:monospace;}
   </style>
 </head>
 <body>
 
   <div class="hdr">
     <div class="logo">📸 Inter<span class="logo-accent">Pro</span></div>
-    <!-- Nouveau bouton d'accès au guide Mémo -->
-    <button class="btn btn-secondary" id="btn-info" style="padding:8px 14px; font-size:0.85rem;">❓ Guide / Info</button>
+    <div id="root-status" style="font-size:0.8rem; font-weight:600;">Stockage...</div>
+    <button class="btn btn-secondary" id="btn-info" style="padding:8px 12px; font-size:0.85rem;">❓ Mémo</button>
   </div>
 
   <!-- VUE 1 : LISTE DES INTERVENTIONS -->
   <div class="view active" id="v-list">
-    <div style="display:flex;justify-content:space-between;margin-bottom:20px;gap:10px;">
-      <div id="root-status" style="font-size:0.85rem; display:flex; align-items:center; color:var(--muted)">Configuration du stockage...</div>
-      <button class="btn btn-primary" id="btn-new" style="width:auto">+ Nouvelle Intervention</button>
-    </div>
     <div id="list-container"></div>
+    
+    <!-- Zone fixe en bas pour l'accueil -->
+    <div class="bottom-action-bar">
+      <button class="btn btn-primary" id="btn-new">➕ Nouvelle Intervention</button>
+    </div>
   </div>
 
   <!-- VUE 2 : DETAIL D'UNE INTERVENTION -->
@@ -76,44 +91,42 @@
       <button class="btn btn-danger" id="btn-delete">🗑</button>
     </div>
     <div id="folder-banner"></div>
-    <div style="margin-bottom:20px;">
-      <button class="btn btn-primary" id="btn-photo">📷 PRENDRE UNE PHOTO</button>
-    </div>
     <div id="grid" class="photo-grid"></div>
     <input type="file" id="camera-input" accept="image/jpeg,image/png" capture="environment" style="display:none"/>
+    
+    <!-- Zone fixe en bas pour la caméra -->
+    <div class="bottom-action-bar">
+      <button class="btn btn-primary" id="btn-photo">📸 PRENDRE UNE PHOTO</button>
+    </div>
   </div>
 
-  <!-- VUE 3 : ONGLET INFO / RÉSUMÉ MÉMOIRE -->
+  <!-- VUE 3 : ONGLET INFO / PARAMÈTRES STORAGE -->
   <div class="view" id="v-info">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
       <button class="btn btn-secondary" id="btn-info-back">← Retour</button>
-      <h2>Guide de fonctionnement</h2>
+      <h2>Guide & Options</h2>
+    </div>
+
+    <!-- NOUVEAU BLOCK : OPTION DE CHANGEMENT DE STOCKAGE INTERNE -->
+    <div class="info-box" style="border: 1px solid rgba(255,80,80,0.3);">
+      <h4 style="color:var(--red);">💾 Changer le Stockage Interne</h4>
+      <p style="margin-bottom:12px;">Si vous voulez changer de dossier racine, basculer sur une carte SD, ou si vous avez des erreurs d'accès, cliquez sur le bouton ci-dessous pour modifier l'emplacement cible.</p>
+      <button class="btn btn-secondary" id="btn-change-root" style="width:100%; border-color:var(--red); color:var(--red);">🔄 Sélectionner un autre dossier</button>
     </div>
 
     <div class="info-box">
       <h4>📂 Où sont mes fichiers ?</h4>
-      <p>Tout est enregistré <strong>en local sur votre appareil</strong>. Lors du premier lancement ou après une longue absence, l'application vous demande de cibler un emplacement. Elle y crée automatiquement le dossier principal : <code>InterventionPro_Data</code>.</p>
+      <p>Ils sont sur votre téléphone dans le dossier que vous avez autorisé au début, rangés dans un dossier maître nommé <code>InterventionPro_Data</code>.</p>
     </div>
 
     <div class="info-box">
-      <h4>🏷️ Organisation Automatique</h4>
-      <p>Pour chaque intervention, vous ne tapez qu'un <strong>Titre</strong>. L'application génère automatiquement un sous-dossier normé avec la date et l'heure courante :</p>
-      <p style="margin-top:8px; font-weight:bold; color:#fff;">Format : <code>[Titre]_[ANNÉE]-[MOIS]-[JOUR]_[HEURE]-[MINUTES]</code></p>
-      <p style="font-size:0.8rem; margin-top:4px;">Exemple : <code>Installation_Clim_2026-07-19_13-15</code></p>
+      <h4>🏷️ Organisation</h4>
+      <p>Chaque dossier d'intervention se crée ainsi : <br><code>[Titre]_[DATE]_[HEURE]</code></p>
     </div>
 
     <div class="info-box">
-      <h4>🔒 Longue période sans utilisation ?</h4>
-      <p>Les navigateurs internet (Chrome, Edge) coupent l'accès aux fichiers locaux par sécurité si vous n'avez pas ouvert l'application depuis longtemps.</p>
-      <p style="margin-top:8px;"><strong>Que faire ?</strong> Cliquez simplement sur "Nouvelle Intervention" ou ouvrez-en une existante : le navigateur vous demandera de re-confirmer l'accès à votre dossier de base. Une fois validé, toutes vos anciennes photos réapparaîtront instantanément.</p>
-    </div>
-
-    <div class="info-box">
-      <h4>⚠️ Précautions importantes</h4>
-      <ul>
-        <li>N'effacez pas le cache ou l'historique lourd de votre navigateur sous peine de perdre la liste visible à l'écran (les dossiers physiques restent sains sur le disque).</li>
-        <li>Si vous supprimez une intervention depuis le bouton poubelle 🗑, elle disparaît de l'application mais <strong>les photos restent en sécurité sur votre appareil</strong>.</li>
-      </ul>
+      <h4>🔒 Accès bloqué après inactivité ?</h4>
+      <p>Si le téléphone "oublie" l'autorisation après quelques semaines, lancez simplement une photo ou une création : Android affichera une alerte pour que vous cliquiez sur "Autoriser" à nouveau.</p>
     </div>
   </div>
 
@@ -121,8 +134,8 @@
   <div class="overlay" id="m-create">
     <div class="modal">
       <h3>Nouvelle intervention</h3>
-      <input type="text" id="in-title" placeholder="Titre de l'intervention"/>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <input type="text" id="in-title" placeholder="Titre de l'intervention (ex: Clim_Dupont)"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
         <button class="btn btn-secondary" onclick="hideModals()">Annuler</button>
         <button class="btn btn-primary" id="btn-modal-create" style="width:auto">Créer</button>
       </div>
@@ -144,23 +157,31 @@ let currentId = null;
 let objectURLs = [];
 
 if (!hasFileSystem) {
-  alert("Ton navigateur ne supporte pas la gestion de dossiers locaux. Utilise Chrome/Edge sur Android ou PC.");
+  alert("Android/iOS : Assure-toi d'utiliser Chrome, Edge ou Opera. Certains navigateurs intégrés (comme Facebook ou Samsung Internet) bloquent l'accès aux dossiers locaux.");
 }
 
 updateRootStatus();
 renderList();
 
-// Navigation & Evénements
+// Bouton de réinitialisation/changement du dossier racine
+document.getElementById('btn-change-root').onclick = async () => {
+  rootHandle = null;
+  currentFolderHandle = null;
+  if(await verifyRootHandle()) {
+    alert("Nouveau dossier de stockage configuré avec succès !");
+    closeInfoView();
+  }
+};
+
 document.getElementById('btn-new').onclick = async () => {
   if (!await verifyRootHandle()) return;
   showModal('m-create');
-  document.getElementById('in-title').focus();
+  setTimeout(() => document.getElementById('in-title').focus(), 150);
 };
+
 document.getElementById('btn-back').onclick = goHome;
 document.getElementById('btn-modal-create').onclick = createIntervention;
 document.getElementById('btn-delete').onclick = deleteIntervention;
-
-// Événements pour le nouvel onglet info
 document.getElementById('btn-info').onclick = openInfoView;
 document.getElementById('btn-info-back').onclick = closeInfoView;
 
@@ -172,7 +193,7 @@ document.getElementById('btn-photo').onclick = async () => {
     try {
       currentFolderHandle = await rootHandle.getDirectoryHandle(inv.folderName, { create: false });
     } catch(e) {
-      return alert("Impossible d'accéder au dossier local de cette intervention.");
+      return alert("Erreur d'accès au dossier local. Essayez de re-sélectionner le stockage depuis l'onglet Mémo.");
     }
   }
   camInput.click();
@@ -194,7 +215,7 @@ camInput.onchange = async (e) => {
     await loadPhotos();
   } catch(err) {
     console.error(err);
-    alert("Erreur d'écriture dans le dossier local.");
+    alert("Erreur lors de la sauvegarde de la photo.");
   } finally {
     e.target.value = '';
   }
@@ -203,10 +224,10 @@ camInput.onchange = async (e) => {
 function updateRootStatus() {
   const status = document.getElementById('root-status');
   if (rootHandle) {
-    status.innerHTML = `📁 Stockage local actif`;
+    status.innerHTML = `📁 Actif`;
     status.style.color = "var(--green)";
   } else {
-    status.innerHTML = `⚠️ Stockage non relié`;
+    status.innerHTML = `⚠️ Non relié`;
     status.style.color = "var(--accent)";
   }
 }
@@ -220,13 +241,13 @@ async function verifyRootHandle() {
   }
   
   try {
-    alert("Veuillez sélectionner un dossier sur votre appareil. L'application y créera automatiquement son dossier de stockage local 'InterventionPro_Data'.");
+    alert("Choisissez l'emplacement sur votre téléphone (Interne ou Carte SD). Un dossier 'InterventionPro_Data' y sera configuré.");
     const baseHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
     rootHandle = await baseHandle.getDirectoryHandle('InterventionPro_Data', { create: true });
     updateRootStatus();
     return true;
   } catch (e) {
-    if (e.name !== 'AbortError') alert("Erreur d'accès au stockage : " + e.message);
+    if (e.name !== 'AbortError') alert("Erreur : " + e.message);
     return false;
   }
 }
@@ -258,12 +279,12 @@ async function loadPhotos() {
       }
     }
   } catch(e) {
-    console.error("Erreur lecture dossier:", e);
+    console.error(e);
   }
 }
 
 async function deletePhoto(name) {
-  if(!confirm("Supprimer cette photo définitivement du dossier local ?")) return;
+  if(!confirm("Supprimer la photo du téléphone ?")) return;
   try {
     await currentFolderHandle.removeEntry(name);
     const inv = interventions.find(i => i.id === currentId);
@@ -271,13 +292,13 @@ async function deletePhoto(name) {
     save();
     await loadPhotos();
   } catch(e) {
-    alert("Impossible de supprimer le fichier.");
+    alert("Erreur de suppression.");
   }
 }
 
 async function createIntervention() {
   const title = document.getElementById('in-title').value.trim();
-  if(!title) return alert("Veuillez saisir un titre.");
+  if(!title) return alert("Saisissez un titre.");
   
   try {
     const now = new Date();
@@ -307,7 +328,7 @@ async function createIntervention() {
     renderList();
     openFolder(inv.id);
   } catch(e) {
-    alert("Erreur lors de la création automatique du dossier : " + e.message);
+    alert("Erreur création dossier : " + e.message);
   }
 }
 
@@ -335,7 +356,7 @@ async function openFolder(id) {
   document.getElementById('d-title').textContent = inv.title;
   
   document.getElementById('v-list').classList.remove('active');
-  document.getElementById('v-info').classList.remove('active'); // Sécurité
+  document.getElementById('v-info').classList.remove('active');
   document.getElementById('v-detail').classList.add('active');
   
   if (rootHandle) {
@@ -354,7 +375,7 @@ function renderFolderBanner(inv) {
   const b = document.getElementById('folder-banner');
   const linked = !!currentFolderHandle;
   b.className = 'folder-banner ' + (linked ? 'linked' : 'unlinked');
-  b.innerHTML = linked ? `✅ Enregistré automatiquement dans : InterventionPro_Data/${escapeHTML(inv.folderName)}` : `⚠️ Liaison racine perdue. Créez ou ouvrez un élément pour réactiver l'accès.`;
+  b.innerHTML = linked ? `✅ Enregistré automatiquement` : `⚠️ Lien perdu avec ce dossier.`;
 }
 
 function goHome() {
@@ -368,7 +389,6 @@ function goHome() {
   renderList();
 }
 
-// Logique pour l'affichage de l'onglet Info
 function openInfoView() {
   document.getElementById('v-list').classList.remove('active');
   document.getElementById('v-detail').classList.remove('active');
@@ -381,7 +401,7 @@ function closeInfoView() {
 }
 
 async function deleteIntervention() {
-  if(confirm("Supprimer cette intervention de l'application ?\n(Note : Par sécurité, son dossier local et ses photos ne seront pas effacés du disque)")) {
+  if(confirm("Supprimer de la liste ?\n(Les fichiers locaux ne seront pas effacés)")) {
     interventions = interventions.filter(i => i.id !== currentId);
     save();
     goHome();
